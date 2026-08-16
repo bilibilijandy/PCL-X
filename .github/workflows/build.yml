@@ -3,7 +3,6 @@ name: Build
 on:
   push:
     branches: [ main, master ]
-    tags: [ 'v*' ]
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
@@ -61,23 +60,43 @@ jobs:
           path: ${{ runner.temp }}/out/${{ matrix.rid }}/*
           if-no-files-found: error
 
-  # 推送到 v* 标签时，把所有平台的产物打包成 GitHub Release
+  # 编译成功后自动创建版本标签并生成 GitHub Release（无需手动推送 v* 标签）
   release:
-    name: Create GitHub Release
-    if: startsWith(github.ref, 'refs/tags/v')
+    name: Auto Tag & Release
+    if: ${{ github.event_name != 'pull_request' }}
     needs: [publish]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts/
 
+      - name: Determine version
+        id: ver
+        run: echo "version=v1.${{ github.run_number }}.0" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "${{ steps.ver.outputs.version }}" || echo "tag already exists"
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${{ steps.ver.outputs.version }}" || echo "tag push skipped"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.ver.outputs.version }}
+          name: ${{ steps.ver.outputs.version }}
           generate_release_notes: true
           files: |
             artifacts/**/*
