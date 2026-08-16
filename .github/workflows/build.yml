@@ -98,6 +98,10 @@ jobs:
             $plist = ($plistLines -join "`n") -replace '__VER__', $ver
             Set-Content -Path (Join-Path $appDir "Contents/Info.plist") -Value $plist -Encoding UTF8
 
+            # ad-hoc 签名：让 .app 有有效代码签名，避免 Gatekeeper 判定为「已损坏」
+            & codesign --force --deep --sign - "$appDir"
+            echo "ad-hoc codesigned $appDir"
+
             $zip = Join-Path $out "PCL-X-$ver-$rid.zip"
             & ditto -c -k --sequesterRsrc --keepParent "$appDir" "$zip"
             Remove-Item -Path (Join-Path $out $src) -Force
