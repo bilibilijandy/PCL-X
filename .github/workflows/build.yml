@@ -60,23 +60,25 @@ jobs:
         run: dotnet restore src/PCL-X/PCL-X.csproj
 
       - name: Publish (${{ matrix.rid }})
-        # 目录发布（非单文件）：Avalonia 的 native 库从目录正常加载，避免单文件启动即崩
-        run: dotnet publish src/PCL-X/PCL-X.csproj -c Release -r ${{ matrix.rid }} --self-contained true -o "${{ runner.temp }}/out/${{ matrix.rid }}"
+        # 单文件发布：下载即双击启动，无需解压。native 库内嵌自动解压。
+        run: dotnet publish src/PCL-X/PCL-X.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false -p:IncludeNativeLibrariesForSelfExtract=true -o "${{ runner.temp }}/out/${{ matrix.rid }}"
 
-      # 打包为「程序名-版本-系统-架构」的 zip；macOS 额外封装成 .app bundle
+      # 产物按「程序名-版本-系统-架构」命名：Windows 单文件 exe；macOS 封装 .app（双击即启动）；Linux 单文件
       - name: Package artifact (version + platform)
         shell: pwsh
         run: |
           $ver = "v1.${{ github.run_number }}.0"
           $rid = "${{ matrix.rid }}"
+          $ext = "${{ matrix.ext }}"
           $out = Join-Path "${{ runner.temp }}" "out/$rid"
+          $src = "PCL-X$ext"
 
           if ($rid -like "osx-*") {
-            # macOS：把整个发布目录放入 .app/Contents/MacOS，再封 Info.plist + ad-hoc 签名 + zip
+            # macOS：单文件放入 .app/Contents/MacOS -> Info.plist -> ad-hoc 签名 -> zip。双击 .app 直接启动
             $appDir = Join-Path "${{ runner.temp }}" "app/PCL-X.app"
             $macDir = Join-Path $appDir "Contents/MacOS"
             New-Item -ItemType Directory -Force -Path $macDir | Out-Null
-            Copy-Item -Path (Join-Path $out "*") -Destination $macDir -Recurse -Force
+            Copy-Item -Path (Join-Path $out $src) -Destination (Join-Path $macDir "PCL-X") -Force
 
             $plistLines = @(
               '<?xml version="1.0" encoding="UTF-8"?>',
@@ -101,13 +103,14 @@ jobs:
 
             $zip = Join-Path $out "PCL-X-$ver-$rid.zip"
             & ditto -c -k --sequesterRsrc --keepParent "$appDir" "$zip"
+            Remove-Item -Path (Join-Path $out $src) -Force
             echo "packaged to PCL-X-$ver-$rid.zip"
           }
           else {
-            # Windows/Linux：目录发布直接打包 zip
-            $zip = Join-Path $out "PCL-X-$ver-$rid.zip"
-            Compress-Archive -Path (Join-Path $out "*") -DestinationPath $zip -CompressionLevel Optimal
-            echo "packaged to PCL-X-$ver-$rid.zip"
+            # Windows/Linux：单文件重命名为「程序名-版本-系统-架构」(Windows 带 .exe)
+            $dst = "PCL-X-$ver-$rid$ext"
+            Move-Item -Path (Join-Path $out $src) -Destination (Join-Path $out $dst) -Force
+            echo "renamed to $dst"
           }
 
       - name: Upload artifact
