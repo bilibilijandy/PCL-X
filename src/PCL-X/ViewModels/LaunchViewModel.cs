@@ -30,9 +30,6 @@ public partial class LaunchViewModel : ObservableObject
     private string _systemInfo = string.Empty;
 
     [ObservableProperty]
-    private string _pclInteropNote = "PCL2 数据互通仅在 Windows 下可用";
-
-    [ObservableProperty]
     private ObservableCollection<string> _installedVersions = new();
 
     [ObservableProperty]
@@ -104,9 +101,6 @@ public partial class LaunchViewModel : ObservableObject
         if (ModPlatform.RegistryAvailable)
         {
             ImportPcl2Settings();
-            PclInteropNote = ModPclConfig.HasPcl2RegistryData()
-                ? "已检测到原版 PCL2 数据，窗口 / JVM / 账户设置已自动互通"
-                : "未检测到原版 PCL2 注册表数据，可独立使用";
         }
     }
 

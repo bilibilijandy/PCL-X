@@ -20,6 +20,13 @@ public partial class MainWindow : Window
     private ScrollViewer? _loginPanel;
     private ScrollViewer? _downloadPanel;
     private ScrollViewer? _settingsPanel;
+    private Panel? _launchLoginForms;
+    private Border? _offlineLoginBox;
+    private Border? _microsoftLoginBox;
+    private Button? _loginTypeMs;
+    private Button? _loginTypeOffline;
+    private Button? _loginTypeNide;
+    private Button? _loginTypeAuth;
 
     public MainWindow()
     {
@@ -35,6 +42,13 @@ public partial class MainWindow : Window
         _loginPanel = this.FindControl<ScrollViewer>("LoginPanel");
         _downloadPanel = this.FindControl<ScrollViewer>("DownloadPanel");
         _settingsPanel = this.FindControl<ScrollViewer>("SettingsPanel");
+        _launchLoginForms = this.FindControl<Panel>("LaunchLoginForms");
+        _offlineLoginBox = this.FindControl<Border>("OfflineLoginBox");
+        _microsoftLoginBox = this.FindControl<Border>("MicrosoftLoginBox");
+        _loginTypeMs = this.FindControl<Button>("LoginTypeMs");
+        _loginTypeOffline = this.FindControl<Button>("LoginTypeOffline");
+        _loginTypeNide = this.FindControl<Button>("LoginTypeNide");
+        _loginTypeAuth = this.FindControl<Button>("LoginTypeAuth");
     }
 
     protected override async void OnLoaded(RoutedEventArgs e)
@@ -45,6 +59,7 @@ public partial class MainWindow : Window
         _loginVm = App.Services.GetRequiredService<LoginViewModel>();
         _loginVm.LoginSucceeded += OnLoginSucceeded;
         if (_loginPanel != null) _loginPanel.DataContext = _loginVm;
+        if (_launchLoginForms != null) _launchLoginForms.DataContext = _loginVm;
         await _loginVm.LoadAccountsAsync();
 
         _downloadVm = App.Services.GetRequiredService<DownloadViewModel>();
@@ -69,6 +84,31 @@ public partial class MainWindow : Window
         if (_vm != null)
         {
             _vm.CurrentUser = user;
+        }
+    }
+
+    // 启动页登录方式切换（对应 PCL2 PanTypeOne 单选）：微软正版登录 / 离线登录
+    private void ShowLoginType(string type)
+    {
+        if (_offlineLoginBox != null) _offlineLoginBox.IsVisible = type == "offline";
+        if (_microsoftLoginBox != null) _microsoftLoginBox.IsVisible = type == "microsoft";
+    }
+
+    private void SetLoginTypePill(string type)
+    {
+        if (_loginTypeMs != null) _loginTypeMs.Classes.Toggle("selected", type == "microsoft");
+        if (_loginTypeOffline != null) _loginTypeOffline.Classes.Toggle("selected", type == "offline");
+        if (_loginTypeNide != null) _loginTypeNide.Classes.Toggle("selected", false);
+        if (_loginTypeAuth != null) _loginTypeAuth.Classes.Toggle("selected", false);
+    }
+
+    private void LoginTypeClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button b && b.Tag is string type &&
+            (type == "microsoft" || type == "offline"))
+        {
+            ShowLoginType(type);
+            SetLoginTypePill(type);
         }
     }
 

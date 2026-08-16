@@ -109,6 +109,25 @@
             <Setter Property="Background" Value="#55ffffff" />
         </Style>
 
+        <!-- 启动页登录方式选择胶囊（对应 PCL2 PanTypeOne 的登录方式单选） -->
+        <Style Selector="Button.logintype">
+            <Setter Property="Background" Value="#01eaf2fe" />
+            <Setter Property="Foreground" Value="{StaticResource BrushDeep}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="13.5" />
+            <Setter Property="Padding" Value="12,4" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="3,0" />
+        </Style>
+        <Style Selector="Button.logintype:pointerover">
+            <Setter Property="Background" Value="#20eaf2fe" />
+        </Style>
+        <Style Selector="Button.logintype.selected">
+            <Setter Property="Background" Value="{StaticResource BrushWhite}" />
+            <Setter Property="Foreground" Value="{StaticResource BrushBlue}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
         <!-- 标题栏最小化/关闭按钮（白图标，对应 PCL2 MyIconButton Theme=White） -->
         <Style Selector="Button.titlebtn">
             <Setter Property="Background" Value="Transparent" />
@@ -278,13 +297,38 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- 横向导航（PCL2：启动/下载/联机/设置/更多，胶囊按钮） -->
+                <!-- 横向导航（PCL2：启动/下载/联机/设置/更多，胶囊按钮+图标） -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button Classes="navpill" Content="启动" Tag="0" Click="TitleNavClick" />
-                    <Button Classes="navpill" Content="下载" Tag="2" Click="TitleNavClick" />
-                    <Button Classes="navpill" Content="联机" Tag="5" Click="TitleNavClick" />
-                    <Button Classes="navpill" Content="设置" Tag="3" Click="TitleNavClick" />
-                    <Button Classes="navpill" Content="更多" Tag="6" Click="TitleNavClick" />
+                    <Button Classes="navpill" Tag="0" Click="TitleNavClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="M52.1,164.5c-1.4,0-3.1-0.5-4.2-1.3c-2.6-1.7-4-4.2-4-7V43.8c0-2.9,1.6-5.8,4.1-7c1.2-0.8,2.7-1.2,4.1-1.2c1.5,0,2.9,0.4,4.2,1.2L153.1,93c2.6,1.8,4.1,4.2,4.1,7.1c0,3-1.5,5.4-4.1,7.1l-96.8,56.2C55.1,164,53.5,164.5,52.1,164.5z" Fill="White" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBlock Text="启动" />
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="navpill" Tag="2" Click="TitleNavClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="M955 610h-59c-15 0-29 13-29 29v196c0 15-13 29-29 29h-649c-15 0-29-13-29-29v-196c0-15-13-29-29-29h-59v343c0 44 35 79 79 79h787c44 0 78-35 78-79V610h-30zM492 740c11 11 29 11 41 0l265-265c11-11 11-29 0-41l-41-41c-11-11-29-11-41 0l-110 110c-11 11-33 3-33-13V68c0-14-16-29-29-29h-59c-15 0-29 13-29 29v422c0 17-22 25-33 13l-110-110c-11-11-29-11-41 0l-41 41c-11 11-11 29 0 41l283 285z" Fill="White" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBlock Text="下载" />
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="navpill" Tag="5" Click="TitleNavClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="M512 817c-48.6 0-88-39.4-88-88s39.4-88 88-88 88 39.4 88 88-39.4 88-88 88zM238 566c70.7-91.2 159.7-137 267-137 118.4 0 214.2 55.4 287.4 166.3l-53.4 30.4c-13.8 7.9-31.4 4.4-41.1-8.2-50.3-64.9-114.6-97.4-192.9-97.4-86.8 0-156.8 40.3-209.9 121l-48-28c-15.3-8.9-20.4-28.5-11.5-43.8 2.3-3.9 3.4-3.5 12-3.3zM108 419c97.5-141 230-211.5 397.4-211.5 178.8 0 317.7 80.2 416.8 240.7l-56.5 31.7c-13.7 7.7-30.9 4.3-40.7-8C735.6 360 629 303 505.4 301c-131.4-2.3-243.8 62-337.1 193l-50.1-28.5c-15.4-8.7-20.7-28.3-12-43.6 1.5-3.3 3.4-3.5 12-3.3z" Fill="White" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBlock Text="联机" />
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="navpill" Tag="3" Click="TitleNavClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="M940.4 463.7L773.3 174.2c-17.3-30-49.2-48.4-83.8-48.4H340.2c-34.6 0-66.5 18.5-83.8 48.4L89.2 463.7c-17.3 30-17.3 66.9 0 96.8L256.4 850c17.3 30 49.2 48.4 83.8 48.4h349.2c34.6 0 66.5-18.5 83.8-48.4l167.2-289.5c17.3-29.9 17.3-66.8 0-96.8zM522.3 321.2c10.7-1.3 20.7-2 30.5-2.1 119.9 0 214 110.3 186.3 235-15.8 70.9-71.5 126.6-142.4 142.4-46.9 10.4-89.6 7.4-125.6-8.1V321.2z" Fill="White" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBlock Text="设置" />
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="navpill" Tag="6" Click="TitleNavClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="M364 0H91C40 0 0 40 0 91v364C0 506 40 546 91 546h273c51 0 91-40 91-91V91c0-51-40-91-91-91zM341 341H113V113h228v228zM933 0H660c-51 0-91 40-91 91v364c0 51 40 91 91 91h273c51 0 91-40 91-91V91c0-51-40-91-91-91zM910 341H683V113h227v228zM364 568H91c-51 0-91 40-91 91v273c0 51 40 91 91 91h273c51 0 91-40 91-91V659c0-51-40-91-91-91zM341 910H113V683h228v227zM933 568H660c-51 0-91 40-91 91v273c0 51 40 91 91 91h273c51 0 91-40 91-91V659c0-51-40-91-91-91zM910 910H683V683h227v227z" Fill="White" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBlock Text="更多" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <!-- 设置 / 最小化 / 关闭（对应 PCL2 BtnTitleMin / BtnTitleClose，右上角不显示玩家名） -->
@@ -319,8 +363,9 @@
                                 Content="{Binding SelectedVersion, FallbackValue='版本选择'}"
                                 Tag="版本选择" Click="NotImplementedClick" />
 
-                        <!-- 账号 / 登录区（对应 PCL2 PanLogin） -->
+                        <!-- 账号 / 登录区（对应 PCL2 PanLogin：账户 pill + 登录方式单选 + 表单） -->
                         <StackPanel Grid.Row="1" Margin="20,24,20,0" VerticalAlignment="Top">
+                            <!-- 当前账户 pill（对应 PCL2 PanTypeOne） -->
                             <Border CornerRadius="13" MinHeight="27" MaxHeight="27" Background="#01eaf2fe"
                                     HorizontalAlignment="Center" Padding="12,0">
                                 <StackPanel Orientation="Horizontal">
@@ -328,23 +373,45 @@
                                     <TextBlock Text="{Binding CurrentUser.UserName, FallbackValue='离线'}"
                                                FontSize="14" Foreground="{StaticResource BrushBlue}"
                                                VerticalAlignment="Center" />
-                                    <TextBlock Text="　(离线)" FontSize="14" Foreground="{StaticResource BrushBlue}"
-                                               VerticalAlignment="Center" />
                                 </StackPanel>
                             </Border>
+
+                            <!-- 登录方式选择（对应 PCL2 PanTypeOne：微软正版登录 / 离线登录 / 统一通行证 / 外置登录） -->
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,14,0,0">
-                                <Button Classes="navpill" Content="正版" Tag="正版登录" Click="NotImplementedClick" Margin="4,0" FontSize="13" />
-                                <Button Classes="navpill" Content="离线" Tag="离线登录" Click="NotImplementedClick" Margin="4,0" FontSize="13" />
+                                <Button Classes="logintype selected" x:Name="LoginTypeMs" Tag="microsoft" Content="微软正版登录"
+                                        Click="LoginTypeClick" />
+                                <Button Classes="logintype" x:Name="LoginTypeOffline" Tag="offline" Content="离线登录"
+                                        Click="LoginTypeClick" />
+                                <Button Classes="logintype" x:Name="LoginTypeNide" Tag="统一通行证" Content="统一通行证"
+                                        Click="NotImplementedClick" />
+                                <Button Classes="logintype" x:Name="LoginTypeAuth" Tag="外置登录" Content="外置登录"
+                                        Click="NotImplementedClick" />
                             </StackPanel>
-                            <Border Background="{StaticResource BrushWhite}" CornerRadius="3" Padding="14" Margin="0,16,0,0"
-                                    BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="离线账户" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource BrushDeep}" Margin="0,0,0,8" />
-                                    <TextBox Watermark="输入用户名登录离线模式" />
-                                    <Button Classes="primary" Content="登录" Command="{Binding OpenLoginWindowCommand}"
-                                            Margin="0,10,0,0" HorizontalAlignment="Stretch" />
-                                </StackPanel>
-                            </Border>
+
+                            <!-- 登录表单（DataContext 为 LoginViewModel） -->
+                            <Grid x:Name="LaunchLoginForms">
+                                <!-- 离线登录 -->
+                                <Border x:Name="OfflineLoginBox" Background="{StaticResource BrushWhite}" CornerRadius="3" Padding="14" Margin="0,16,0,0"
+                                        BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="1" IsVisible="False">
+                                    <StackPanel>
+                                        <TextBox Watermark="输入游戏用户名" Text="{Binding UserName}" />
+                                        <Button Classes="primary" Content="登录" Command="{Binding LoginOfflineCommand}"
+                                                Margin="0,10,0,0" HorizontalAlignment="Stretch" />
+                                    </StackPanel>
+                                </Border>
+                                <!-- 微软（正版）登录 -->
+                                <Border x:Name="MicrosoftLoginBox" Background="{StaticResource BrushWhite}" CornerRadius="3" Padding="14" Margin="0,16,0,0"
+                                        BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="1">
+                                    <StackPanel>
+                                        <Button Classes="primary" Content="登录" Command="{Binding LoginMicrosoftCommand}"
+                                                IsEnabled="{Binding !IsMicrosoftLoggingIn}" HorizontalAlignment="Stretch" />
+                                        <TextBox Watermark="粘贴浏览器回调地址 (code=...)" Text="{Binding MicrosoftCallback}"
+                                                 Margin="0,10,0,0" />
+                                        <Button Content="完成登录" Command="{Binding CompleteMicrosoftLoginCommand}"
+                                                Margin="0,10,0,0" HorizontalAlignment="Stretch" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
                         </StackPanel>
 
                         <!-- 启动按钮（对应 PCL2 BtnLaunch：实心蓝块 + 版本标签在下） -->
@@ -370,8 +437,6 @@
                         <Border Classes="card">
                             <StackPanel>
                                 <TextBlock Classes="title" Text="添加离线账户" />
-                                <TextBlock Classes="hint" Margin="0,0,0,10" TextWrapping="Wrap"
-                                           Text="离线模式无需微软账户即可使用，可进入单人游戏及离线服务器。用户名长度 3-16 个字符。" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -393,9 +458,7 @@
                                 <Border Background="#f2f7ff" CornerRadius="3" Padding="12" Margin="0,12,0,0"
                                         BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="1">
                                     <StackPanel>
-                                        <TextBlock Classes="hint" TextWrapping="Wrap"
-                                                   Text="微软登录采用浏览器回显方式：点击「微软登录」后浏览器会打开微软授权页，登录成功后把地址栏中 oauth20_desktop.srf?code=... 的完整地址粘贴到下方，再点「完成登录」。" />
-                                        <TextBox Text="{Binding MicrosoftCallback}" Margin="0,8,0,0"
+                                        <TextBox Text="{Binding MicrosoftCallback}" Margin="0"
                                                  Watermark="粘贴浏览器回调地址 (oauth20_desktop.srf?code=...)" />
                                         <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                                             <Button Classes="primary" Content="完成登录"
@@ -596,8 +659,6 @@
                         <Border Classes="card">
                             <StackPanel>
                                 <TextBlock Classes="title" Text="版本设置" />
-                                <TextBlock Classes="hint" Margin="0,0,0,8" TextWrapping="Wrap"
-                                           Text="选择要编辑设置的版本。选中具体版本后，下方设置仅对该版本生效；选择「(全局默认)」则作为所有未单独配置版本的默认设置（对应 PCL2 的全局设置）。" />
                                 <ComboBox ItemsSource="{Binding InstalledVersions}"
                                           SelectedItem="{Binding SelectedVersion}" />
                             </StackPanel>
@@ -606,8 +667,6 @@
                         <Border Classes="card">
                             <StackPanel>
                                 <TextBlock Classes="title" Text="游戏目录" />
-                                <TextBlock Classes="hint" Margin="0,0,0,8" TextWrapping="Wrap"
-                                           Text="游戏安装及数据保存的位置。Windows 下默认与原版 PCL2 / 官方启动器共享 %AppData%\.minecraft。" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -637,8 +696,6 @@
                                     <StackPanel>
                                         <TextBlock Text="当前系统" FontSize="10" Classes="label" />
                                         <TextBlock Text="{Binding SystemInfo}" FontSize="11" Margin="0,2,0,0" />
-                                        <TextBlock FontSize="10" Margin="0,6,0,0" Classes="hint"
-                                                   Text="{Binding PclInteropNote}" TextWrapping="Wrap" />
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
@@ -661,8 +718,6 @@
                                         <TextBox Text="{Binding Settings.MaxMemory}" />
                                     </StackPanel>
                                 </Grid>
-                                <TextBlock Classes="hint" Margin="0,8,0,0" TextWrapping="Wrap"
-                                           Text="推荐：4GB 以上内存可设置最大 4096MB；8GB 以上可设置 8192MB。过小会导致游戏卡顿。" />
                             </StackPanel>
                         </Border>
 
@@ -737,7 +792,6 @@
                         <Border Classes="card">
                             <StackPanel>
                                 <TextBlock Classes="title" Text="Mod 管理" />
-                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,16" Text="Mod 管理功能正在开发中，敬请期待！" />
                                 <WrapPanel>
                                     <Button Content="添加 Mod" Tag="添加Mod" Click="NotImplementedClick" />
                                     <Button Content="删除 Mod" Tag="删除Mod" Click="NotImplementedClick" />
@@ -759,7 +813,6 @@
                         <Border Classes="card">
                             <StackPanel>
                                 <TextBlock Classes="title" Text="服务器列表" />
-                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,16" Text="服务器管理功能正在开发中，敬请期待！" />
                                 <WrapPanel>
                                     <Button Content="添加服务器" Tag="添加服务器地址" Click="NotImplementedClick" />
                                     <Button Content="服务器搜索" Tag="服务器搜索" Click="NotImplementedClick" />
@@ -780,7 +833,6 @@
                         <Border Classes="card">
                             <StackPanel>
                                 <TextBlock Classes="title" Text="整合包管理" />
-                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,16" Text="整合包管理功能正在开发中，敬请期待！" />
                                 <WrapPanel>
                                     <Button Content="导入 CurseForge" Tag="CurseForge整合包导入" Click="NotImplementedClick" />
                                     <Button Content="导入 Modrinth" Tag="Modrinth整合包导入" Click="NotImplementedClick" />
@@ -802,7 +854,6 @@
                         <Border Classes="card">
                             <StackPanel>
                                 <TextBlock Classes="title" Text="帮助与支持" />
-                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,16" Text="帮助中心正在开发中，敬请期待！" />
                                 <WrapPanel>
                                     <Button Content="使用教程" Tag="使用教程文档" Click="NotImplementedClick" />
                                     <Button Content="常见问题" Tag="FAQ常见问题" Click="NotImplementedClick" />
