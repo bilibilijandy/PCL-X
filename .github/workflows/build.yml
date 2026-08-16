@@ -62,18 +62,52 @@ jobs:
       - name: Publish (${{ matrix.rid }})
         run: dotnet publish src/PCL-X/PCL-X.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false -p:IncludeNativeLibrariesForSelfExtract=true -o "${{ runner.temp }}/out/${{ matrix.rid }}"
 
-      # 重命名为「程序名-版本-系统-架构」，与 release 的标签版本保持一致，避免同名文件互相覆盖
-      - name: Rename artifact (version + platform)
+      # 重命名/打包：Windows/Linux 重命名为「程序名-版本-系统-架构」；
+      # macOS 打包成 .app bundle（含 Info.plist）再压缩为带后缀的 zip，避免被当作文稿
+      - name: Package artifact (version + platform)
         shell: pwsh
         run: |
           $ver = "v1.${{ github.run_number }}.0"
           $rid = "${{ matrix.rid }}"
           $ext = "${{ matrix.ext }}"
-          $dir = Join-Path "${{ runner.temp }}" "out/$rid"
+          $out = Join-Path "${{ runner.temp }}" "out/$rid"
           $src = "PCL-X$ext"
-          $dst = "PCL-X-$ver-$rid$ext"
-          Move-Item -Path (Join-Path $dir $src) -Destination (Join-Path $dir $dst) -Force
-          echo "renamed to $dst"
+
+          if ($rid -like "osx-*") {
+            $appDir = Join-Path "${{ runner.temp }}" "app/PCL-X.app"
+            New-Item -ItemType Directory -Force -Path (Join-Path $appDir "Contents/MacOS") | Out-Null
+            Copy-Item -Path (Join-Path $out $src) -Destination (Join-Path $appDir "Contents/MacOS/PCL-X") -Force
+
+            $plistLines = @(
+              '<?xml version="1.0" encoding="UTF-8"?>',
+              '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',
+              '<plist version="1.0">',
+              '<dict>',
+              '  <key>CFBundleName</key><string>PCL-X</string>',
+              '  <key>CFBundleDisplayName</key><string>PCL-X</string>',
+              '  <key>CFBundleIdentifier</key><string>com.pclx.launcher</string>',
+              '  <key>CFBundleExecutable</key><string>PCL-X</string>',
+              '  <key>CFBundlePackageType</key><string>APPL</string>',
+              '  <key>CFBundleVersion</key><string>__VER__</string>',
+              '  <key>CFBundleShortVersionString</key><string>__VER__</string>',
+              '  <key>LSMinimumSystemVersion</key><string>10.15</string>',
+              '  <key>NSHighResolutionCapable</key><true/>',
+              '</dict>',
+              '</plist>'
+            )
+            $plist = ($plistLines -join "`n") -replace '__VER__', $ver
+            Set-Content -Path (Join-Path $appDir "Contents/Info.plist") -Value $plist -Encoding UTF8
+
+            $zip = Join-Path $out "PCL-X-$ver-$rid.zip"
+            & ditto -c -k --sequesterRsrc --keepParent "$appDir" "$zip"
+            Remove-Item -Path (Join-Path $out $src) -Force
+            echo "packaged to PCL-X-$ver-$rid.zip"
+          }
+          else {
+            $dst = "PCL-X-$ver-$rid$ext"
+            Move-Item -Path (Join-Path $out $src) -Destination (Join-Path $out $dst) -Force
+            echo "renamed to $dst"
+          }
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
