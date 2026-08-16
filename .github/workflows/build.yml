@@ -18,25 +18,34 @@ jobs:
           # Windows
           - os: windows-latest
             rid: win-x64
+            ext: .exe
           - os: windows-latest
             rid: win-x86
+            ext: .exe
           - os: windows-latest
             rid: win-arm64
+            ext: .exe
           # macOS
           - os: macos-latest
             rid: osx-x64
+            ext: ''
           - os: macos-latest
             rid: osx-arm64
+            ext: ''
           # Linux (glibc)
           - os: ubuntu-latest
             rid: linux-x64
+            ext: ''
           - os: ubuntu-latest
             rid: linux-arm64
+            ext: ''
           - os: ubuntu-latest
             rid: linux-arm
+            ext: ''
           # Linux (musl)
           - os: ubuntu-latest
             rid: linux-musl-x64
+            ext: ''
 
     steps:
       - name: Checkout
@@ -53,11 +62,24 @@ jobs:
       - name: Publish (${{ matrix.rid }})
         run: dotnet publish src/PCL-X/PCL-X.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false -p:IncludeNativeLibrariesForSelfExtract=true -o "${{ runner.temp }}/out/${{ matrix.rid }}"
 
+      # 重命名为「程序名-版本-系统-架构」，与 release 的标签版本保持一致，避免同名文件互相覆盖
+      - name: Rename artifact (version + platform)
+        shell: pwsh
+        run: |
+          $ver = "v1.${{ github.run_number }}.0"
+          $rid = "${{ matrix.rid }}"
+          $ext = "${{ matrix.ext }}"
+          $dir = Join-Path "${{ runner.temp }}" "out/$rid"
+          $src = "PCL-X$ext"
+          $dst = "PCL-X-$ver-$rid$ext"
+          Move-Item -Path (Join-Path $dir $src) -Destination (Join-Path $dir $dst) -Force
+          echo "renamed to $dst"
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: PCL-X-${{ matrix.rid }}
-          path: ${{ runner.temp }}/out/${{ matrix.rid }}/*
+          path: ${{ runner.temp }}/out/${{ matrix.rid }}/PCL-X-*
           if-no-files-found: error
 
   # 编译成功后自动创建版本标签并生成 GitHub Release（无需手动推送 v* 标签）
