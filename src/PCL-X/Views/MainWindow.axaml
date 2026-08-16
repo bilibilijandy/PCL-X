@@ -195,7 +195,7 @@
                 <StackPanel>
                     <!-- 快速启动区 -->
                     <Border Classes="card">
-                        <TextBlock Classes="title" Text="🎮 启动游戏" />
+<StackPanel>                        <TextBlock Classes="title" Text="🎮 启动游戏" />
                         <StackPanel>
                             <TextBlock Text="选择版本：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
                             <ComboBox ItemsSource="{Binding InstalledVersions}"
@@ -211,11 +211,11 @@
                             <TextBlock Text="提示：若版本列表为空，请前往「下载」面板下载"
                                        FontSize="10" Foreground="#6c7086" Margin="0,10,0,0" TextWrapping="Wrap" />
                         </StackPanel>
-                    </Border>
+</StackPanel>                    </Border>
 
                     <!-- 功能快捷入口 -->
                     <Border Classes="card">
-                        <TextBlock Classes="title" Text="🧰 工具箱" />
+<StackPanel>                        <TextBlock Classes="title" Text="🧰 工具箱" />
                         <StackPanel>
                             <Button Content="📁 .minecraft 目录" Tag="游戏目录打开" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
                             <Button Content="💾 存档管理" Tag="存档管理" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
@@ -224,11 +224,11 @@
                             <Button Content="📦 模组下载" Tag="模组下载站" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
                             <Button Content="🖼 截图文件夹" Tag="截图文件夹" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
                         </StackPanel>
-                    </Border>
+</StackPanel>                    </Border>
 
                     <!-- 其他快捷按钮 -->
                     <Border Classes="card">
-                        <TextBlock Classes="title" Text="⭐ 更多功能" />
+<StackPanel>                        <TextBlock Classes="title" Text="⭐ 更多功能" />
                         <StackPanel>
                             <Button Content="🔍 版本隔离" Tag="版本隔离设置" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
                             <Button Content="💽 自动备份" Tag="自动备份" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
@@ -236,7 +236,7 @@
                             <Button Content="☕ Java 自动安装" Tag="Java自动安装" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
                             <Button Content="📱 联机大厅" Tag="联机功能" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
                         </StackPanel>
-                    </Border>
+</StackPanel>                    </Border>
                 </StackPanel>
             </ScrollViewer>
 
@@ -247,7 +247,7 @@
                         <StackPanel Margin="4">
                             <!-- 欢迎区 -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="👋 欢迎使用 PCL-X" />
+<StackPanel>                                <TextBlock Classes="title" Text="👋 欢迎使用 PCL-X" />
                                 <TextBlock TextWrapping="Wrap" Foreground="#cdd6f4" Margin="0,0,0,8"
                                            Text="PCL-X 是 PCL (Plain Craft Launcher) 的 .NET 移植版本，基于 Avalonia UI 实现全平台兼容，支持 Windows、macOS 和 Linux。本版本正在开发中，目前已实现离线用户登录和游戏下载启动功能。" />
                                 <Grid Margin="0,8,0,0">
@@ -275,22 +275,22 @@
                                         </StackPanel>
                                     </Border>
                                 </Grid>
-                            </Border>
+</StackPanel>                            </Border>
 
                             <!-- 下载进度（显示时） -->
                             <Border Classes="card" IsVisible="{Binding IsDownloading}">
-                                <TextBlock Classes="title" Text="⬇ 下载进度" />
+<StackPanel>                                <TextBlock Classes="title" Text="⬇ 下载进度" />
                                 <StackPanel>
                                     <TextBlock Text="{Binding StatusText}" Margin="0,0,0,8" />
                                     <ProgressBar Value="{Binding DownloadProgress}" IsIndeterminate="False" />
                                     <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:F1}%'}"
                                                HorizontalAlignment="Right" FontSize="11" Foreground="#a6adc8" Margin="0,4,0,0" />
                                 </StackPanel>
-                            </Border>
+</StackPanel>                            </Border>
 
                             <!-- 状态信息 -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="📊 状态信息" />
+<StackPanel>                                <TextBlock Classes="title" Text="📊 状态信息" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120" />
@@ -311,11 +311,11 @@
                                     <TextBlock Grid.Row="3" Grid.Column="0" Text="可用版本：" Foreground="#a6adc8" />
                                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AvailableVersions.Count, StringFormat='{}共 {0} 个'}" />
                                 </Grid>
-                            </Border>
+</StackPanel>                            </Border>
 
                             <!-- 关于 -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="ℹ 关于 PCL-X" />
+<StackPanel>                                <TextBlock Classes="title" Text="ℹ 关于 PCL-X" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120" />
@@ -336,7 +336,7 @@
                                     <TextBlock Grid.Row="3" Grid.Column="0" Text="开源地址：" Foreground="#a6adc8" />
                                     <TextBlock Grid.Row="3" Grid.Column="1" Text="github.com/bilibilijandy/PCL-X" Foreground="#89b4fa" />
                                 </Grid>
-                            </Border>
+</StackPanel>                            </Border>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
@@ -347,7 +347,7 @@
                         <StackPanel Margin="4" x:DataType="vm:LoginViewModel">
                             <!-- 离线登录 -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="🆕 添加离线账户" />
+<StackPanel>                                <TextBlock Classes="title" Text="🆕 添加离线账户" />
                                 <TextBlock FontSize="12" Foreground="#a6adc8" Margin="0,0,0,10" TextWrapping="Wrap"
                                            Text="离线模式无需微软账户即可使用，可进入单人游戏及离线服务器。用户名长度 3-16 个字符。" />
                                 <Grid>
@@ -385,11 +385,11 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>
-                            </Border>
+</StackPanel>                            </Border>
 
                             <!-- 已保存账户 -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="📋 已保存账户" />
+<StackPanel>                                <TextBlock Classes="title" Text="📋 已保存账户" />
                                 <ListBox ItemsSource="{Binding SavedAccounts}"
                                          SelectedItem="{Binding SelectedAccount}"
                                          Height="260">
@@ -423,11 +423,11 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                            </Border>
+</StackPanel>                            </Border>
 
                             <!-- 皮肤管理（占位） -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="👕 皮肤与披风" />
+<StackPanel>                                <TextBlock Classes="title" Text="👕 皮肤与披风" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -447,7 +447,7 @@
                                         <Button Content="🔄 更换模型" Tag="Steve/Alex模型切换" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
                                     </StackPanel>
                                 </Grid>
-                            </Border>
+</StackPanel>                            </Border>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
@@ -458,7 +458,7 @@
                         <StackPanel Margin="4" x:DataType="vm:DownloadViewModel">
                             <!-- 下载控制区 -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="🎮 版本下载" />
+<StackPanel>                                <TextBlock Classes="title" Text="🎮 版本下载" />
                                 <Grid Margin="0,0,0,12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -477,11 +477,11 @@
 
                                 <!-- 下载进度 -->
                                 <Border Background="#313244" CornerRadius="6" Padding="12" IsVisible="{Binding IsDownloading}">
-                                    <TextBlock Text="{Binding StatusText}" FontSize="12" Margin="0,0,0,6" />
+<StackPanel>                                    <TextBlock Text="{Binding StatusText}" FontSize="12" Margin="0,0,0,6" />
                                     <ProgressBar Value="{Binding Progress}" />
                                     <TextBlock Text="{Binding Progress, StringFormat='{}{0:F1}%'}"
                                                HorizontalAlignment="Right" FontSize="11" Foreground="#a6adc8" Margin="0,4,0,0" />
-                                </Border>
+</StackPanel>                                </Border>
 
                                 <!-- 已安装列表 -->
                                 <StackPanel Orientation="Horizontal" Margin="0,12,0,8">
@@ -501,11 +501,11 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
-                            </Border>
+</StackPanel>                            </Border>
 
                             <!-- 版本列表 -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="📚 可用版本列表" />
+<StackPanel>                                <TextBlock Classes="title" Text="📚 可用版本列表" />
                                 <ListBox ItemsSource="{Binding Versions}"
                                          SelectedItem="{Binding SelectedVersion}"
                                          Height="400">
@@ -539,11 +539,11 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                            </Border>
+</StackPanel>                            </Border>
 
                             <!-- 其他下载（占位） -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="📦 更多资源下载" />
+<StackPanel>                                <TextBlock Classes="title" Text="📦 更多资源下载" />
                                 <WrapPanel>
                                     <Button Content="🔌 Forge 下载" Tag="Forge自动安装" Click="NotImplementedClick" />
                                     <Button Content="🧪 Fabric 下载" Tag="Fabric自动安装" Click="NotImplementedClick" />
@@ -554,7 +554,7 @@
                                     <Button Content="🪟 CurseForge整合包" Tag="CurseForge整合包下载安装" Click="NotImplementedClick" />
                                     <Button Content="📁 Modrinth整合包" Tag="Modrinth整合包下载安装" Click="NotImplementedClick" />
                                 </WrapPanel>
-                            </Border>
+</StackPanel>                            </Border>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
@@ -565,18 +565,18 @@
                         <StackPanel Margin="4" x:DataType="vm:LaunchViewModel">
                             <!-- 版本设置选择（对应 PCL2 的版本设置/全局设置） -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="🎯 版本设置" />
+<StackPanel>                                <TextBlock Classes="title" Text="🎯 版本设置" />
                                 <TextBlock FontSize="11" Foreground="#a6adc8" Margin="0,0,0,8" TextWrapping="Wrap"
                                            Text="选择要编辑设置的版本。选中具体版本后，下方设置仅对该版本生效；选择「(全局默认)」则作为所有未单独配置版本的默认设置（对应 PCL2 的全局设置）。" />
                                 <ComboBox ItemsSource="{Binding InstalledVersions}"
                                           SelectedItem="{Binding SelectedVersion}" />
                                 <TextBlock FontSize="10" Foreground="#6c7086" Margin="0,6,0,0"
                                            Text="提示：切换版本时会自动加载该版本的独立设置。" />
-                            </Border>
+</StackPanel>                            </Border>
 
                             <!-- 游戏目录（对应 PCL2 的游戏目录设置） -->
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="📁 游戏目录" />
+<StackPanel>                                <TextBlock Classes="title" Text="📁 游戏目录" />
                                 <TextBlock FontSize="11" Foreground="#a6adc8" Margin="0,0,0,8" TextWrapping="Wrap"
                                            Text="游戏安装及数据保存的位置。Windows 下默认与原版 PCL2 / 官方启动器共享 %AppData%\\.minecraft。" />
                                 <Grid>
@@ -588,10 +588,10 @@
                                     <Button Grid.Column="1" Content="📂 浏览..." Tag="浏览选择游戏目录"
                                             Click="BrowseGameDirectoryClick" Margin="8,0,0,0" />
                                 </Grid>
-                            </Border>
+</StackPanel>                            </Border>
 
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="☕ Java 运行时设置" />
+<StackPanel>                                <TextBlock Classes="title" Text="☕ Java 运行时设置" />
                                 <StackPanel>
                                     <TextBlock Text="Java 路径：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
                                     <TextBox Text="{Binding Settings.JavaPath}" />
@@ -612,10 +612,10 @@
                                         </StackPanel>
                                     </Border>
                                 </StackPanel>
-                            </Border>
+</StackPanel>                            </Border>
 
                             <Border Classes="card">
-                                <TextBlock Classes="title" Text="💾 内存设置" />
+<StackPanel>                                <TextBlock Classes="title" Text="💾 内存设置" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -632,9 +632,10 @@
                                 </Grid>
                                 <TextBlock FontSize="10" Foreground="#6c7086" Margin="0,8,0,0" TextWrapping="Wrap"
                                            Text="推荐：4GB 以上内存可设置最大 4096MB；8GB 以上可设置 8192MB。过小会导致游戏卡顿。" />
-                            </Border>
+</StackPanel>                            </Border>
 
                             <Border Classes="card">
+                                <StackPanel>
                                 <TextBlock Classes="title" Text="🖼 窗口设置" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -654,9 +655,11 @@
                                     <CheckBox Content="全屏启动" Tag="全屏模式" IsEnabled="False" />
                                     <Button Content="📱 常用分辨率" Tag="分辨率快捷选择" Click="NotImplementedClick" Margin="16,0,0,0" />
                                 </StackPanel>
+                                </StackPanel>
                             </Border>
 
                             <Border Classes="card">
+                                <StackPanel>
                                 <TextBlock Classes="title" Text="🛠 高级参数" />
                                 <StackPanel>
                                     <TextBlock Text="JVM 参数：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
@@ -666,9 +669,11 @@
                                     <TextBox Text="{Binding Settings.GameArguments}"
                                              Watermark="例如：--width 1280 --height 720" />
                                 </StackPanel>
+                                </StackPanel>
                             </Border>
 
                             <Border Classes="card">
+                                <StackPanel>
                                 <TextBlock Classes="title" Text="🌐 服务器" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -684,6 +689,7 @@
                                         <TextBox Text="{Binding Settings.ServerPort}" />
                                     </StackPanel>
                                 </Grid>
+                                </StackPanel>
                             </Border>
 
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
