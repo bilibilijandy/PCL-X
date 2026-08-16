@@ -60,23 +60,23 @@ jobs:
         run: dotnet restore src/PCL-X/PCL-X.csproj
 
       - name: Publish (${{ matrix.rid }})
-        run: dotnet publish src/PCL-X/PCL-X.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false -p:IncludeNativeLibrariesForSelfExtract=true -o "${{ runner.temp }}/out/${{ matrix.rid }}"
+        # 目录发布（非单文件）：Avalonia 的 native 库从目录正常加载，避免单文件启动即崩
+        run: dotnet publish src/PCL-X/PCL-X.csproj -c Release -r ${{ matrix.rid }} --self-contained true -o "${{ runner.temp }}/out/${{ matrix.rid }}"
 
-      # 重命名/打包：Windows/Linux 重命名为「程序名-版本-系统-架构」；
-      # macOS 打包成 .app bundle（含 Info.plist）再压缩为带后缀的 zip，避免被当作文稿
+      # 打包为「程序名-版本-系统-架构」的 zip；macOS 额外封装成 .app bundle
       - name: Package artifact (version + platform)
         shell: pwsh
         run: |
           $ver = "v1.${{ github.run_number }}.0"
           $rid = "${{ matrix.rid }}"
-          $ext = "${{ matrix.ext }}"
           $out = Join-Path "${{ runner.temp }}" "out/$rid"
-          $src = "PCL-X$ext"
 
           if ($rid -like "osx-*") {
+            # macOS：把整个发布目录放入 .app/Contents/MacOS，再封 Info.plist + ad-hoc 签名 + zip
             $appDir = Join-Path "${{ runner.temp }}" "app/PCL-X.app"
-            New-Item -ItemType Directory -Force -Path (Join-Path $appDir "Contents/MacOS") | Out-Null
-            Copy-Item -Path (Join-Path $out $src) -Destination (Join-Path $appDir "Contents/MacOS/PCL-X") -Force
+            $macDir = Join-Path $appDir "Contents/MacOS"
+            New-Item -ItemType Directory -Force -Path $macDir | Out-Null
+            Copy-Item -Path (Join-Path $out "*") -Destination $macDir -Recurse -Force
 
             $plistLines = @(
               '<?xml version="1.0" encoding="UTF-8"?>',
@@ -97,20 +97,17 @@ jobs:
             )
             $plist = ($plistLines -join "`n") -replace '__VER__', $ver
             Set-Content -Path (Join-Path $appDir "Contents/Info.plist") -Value $plist -Encoding UTF8
-
-            # ad-hoc 签名：让 .app 有有效代码签名，避免 Gatekeeper 判定为「已损坏」
             & codesign --force --deep --sign - "$appDir"
-            echo "ad-hoc codesigned $appDir"
 
             $zip = Join-Path $out "PCL-X-$ver-$rid.zip"
             & ditto -c -k --sequesterRsrc --keepParent "$appDir" "$zip"
-            Remove-Item -Path (Join-Path $out $src) -Force
             echo "packaged to PCL-X-$ver-$rid.zip"
           }
           else {
-            $dst = "PCL-X-$ver-$rid$ext"
-            Move-Item -Path (Join-Path $out $src) -Destination (Join-Path $out $dst) -Force
-            echo "renamed to $dst"
+            # Windows/Linux：目录发布直接打包 zip
+            $zip = Join-Path $out "PCL-X-$ver-$rid.zip"
+            Compress-Archive -Path (Join-Path $out "*") -DestinationPath $zip -CompressionLevel Optimal
+            echo "packaged to PCL-X-$ver-$rid.zip"
           }
 
       - name: Upload artifact
