@@ -12,6 +12,8 @@
     <Version>1.0.0</Version>
     <Authors>PCL-X Team</Authors>
     <Description>PCL2移植版 - 基于.NET Avalonia的全平台Minecraft启动器</Description>
+    <!-- 注册表访问已在 ModPlatform.RegistryAvailable 处做运行时平台守卫，CA1416 为误报 -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -26,6 +28,7 @@
     <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" Condition="'$(Configuration)' == 'Debug'" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
   </ItemGroup>
 

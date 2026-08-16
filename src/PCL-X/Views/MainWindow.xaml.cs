@@ -88,4 +88,28 @@ public partial class MainWindow : Window
             await mb.ShowNotImplementedAsync(name);
         }
     }
+
+    private async void BrowseGameDirectoryClick(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var folders = await StorageProvider.OpenFolderPickerAsync(new Avalonia.Platform.Storage.FolderPickerOpenOptions
+            {
+                Title = "选择游戏目录",
+                AllowMultiple = false
+            });
+            if (folders != null && folders.Count > 0)
+            {
+                if (_launchVm != null)
+                {
+                    _launchVm.GameDirectory = folders[0].Path.LocalPath;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            var mb = App.Services.GetRequiredService<IMessageBoxService>();
+            await mb.ShowAsync($"选择目录失败: {ex.Message}", "错误");
+        }
+    }
 }

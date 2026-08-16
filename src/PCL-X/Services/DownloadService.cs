@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PCL_X.Models;
+using PCL_X.Modules;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -116,74 +117,70 @@ public class DownloadService : IDownloadService
         var jarPath = Path.Combine(versionDir, $"{version.Id}.jar");
         await DownloadFileWithMirrorAsync(clientUrl, jarPath, cancellationToken);
 
-        progress?.Report(0.50);
+        progress?.Report(0.40);
 
-        await DownloadLibrariesAsync(doc.RootElement, gameDir, progress, 0.50, 0.90, cancellationToken);
+        await DownloadLibrariesAsync(doc.RootElement, gameDir, versionDir, progress, 0.40, 0.85, cancellationToken);
 
-        await DownloadAssetsAsync(doc.RootElement, gameDir, progress, 0.90, 0.99, cancellationToken);
+        await DownloadAssetsAsync(doc.RootElement, gameDir, progress, 0.85, 0.99, cancellationToken);
 
         progress?.Report(1.0);
     }
 
-    private async Task DownloadLibrariesAsync(JsonElement versionJson, string gameDir, IProgress<double>? progress, double startProgress, double endProgress, CancellationToken cancellationToken)
+    /// <summary>
+    /// 下载 libraries（含 natives）。
+    /// 会按当前系统过滤 rules、按系统下载并解压 natives 原生库。
+    /// </summary>
+    private async Task DownloadLibrariesAsync(JsonElement versionJson, string gameDir, string versionDir, IProgress<double>? progress, double startProgress, double endProgress, CancellationToken cancellationToken)
     {
         if (!versionJson.TryGetProperty("libraries", out var libraries)) return;
 
         var libsDir = Path.Combine(gameDir, "libraries");
         Directory.CreateDirectory(libsDir);
 
-        var libList = new List<(string path, string url)>();
+        var nativeDir = Path.Combine(versionDir, "natives");
+        var nativeJars = new List<(string jarPath, string nativeDir, HashSet<string> exclude)>();
 
+        var libList = new List<ResolvedLibrary>();
         foreach (var lib in libraries.EnumerateArray())
         {
-            string? libPath = null;
-            string? libUrl = null;
-
-            if (lib.TryGetProperty("downloads", out var downloads))
-            {
-                if (downloads.TryGetProperty("artifact", out var artifact))
-                {
-                    if (artifact.TryGetProperty("path", out var p)) libPath = p.GetString();
-                    if (artifact.TryGetProperty("url", out var u)) libUrl = u.GetString();
-                }
-            }
-            else if (lib.TryGetProperty("name", out var nameProp))
-            {
-                var name = nameProp.GetString() ?? "";
-                var parts = name.Split(':');
-                if (parts.Length >= 3)
-                {
-                    var group = parts[0].Replace('.', '/');
-                    var artifact = parts[1];
-                    var ver = parts[2];
-                    libPath = $"{group}/{artifact}/{ver}/{artifact}-{ver}.jar";
-                    libUrl = $"https://libraries.minecraft.net/{libPath}";
-                }
-            }
-
-            if (!string.IsNullOrEmpty(libPath) && !string.IsNullOrEmpty(libUrl))
-            {
-                libList.Add((libPath, libUrl));
-            }
+            var resolved = ModVersion.ResolveLibrary(lib);
+            if (resolved != null) libList.Add(resolved);
         }
 
         for (int i = 0; i < libList.Count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var (path, url) = libList[i];
-            var localPath = Path.Combine(libsDir, path);
+            var lib = libList[i];
+            var localPath = Path.Combine(libsDir, lib.Path.Replace('/', Path.DirectorySeparatorChar));
+
             if (!File.Exists(localPath))
             {
                 try
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(localPath)!);
-                    await DownloadFileWithMirrorAsync(url, localPath, cancellationToken);
+                    await DownloadFileWithMirrorAsync(lib.Url, localPath, cancellationToken);
                 }
                 catch { }
             }
 
-            var p = startProgress + (endProgress - startProgress) * ((double)(i + 1) / libList.Count);
+            if (lib.IsNative)
+            {
+                nativeJars.Add((localPath, nativeDir, lib.ExcludeNames));
+            }
+
+            var p = startProgress + (endProgress - startProgress) * ((double)(i + 1) / Math.Max(1, libList.Count));
             progress?.Report(p);
+        }
+
+        // 解压 natives 原生库（不同系统文件不同，这里按当前系统提取）
+        if (nativeJars.Count > 0)
+        {
+            ModNative.ClearNativeDir(nativeDir);
+            foreach (var (jar, dir, exclude) in nativeJars)
+            {
+                try { ModNative.ExtractNativeJar(jar, dir, exclude); }
+                catch { }
+            }
         }
     }
 

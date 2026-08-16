@@ -363,10 +363,28 @@
                                             Margin="8,0,0,0" />
                                 </Grid>
                                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                                    <Button Content="🔑 微软登录" Tag="微软OAuth登录" Click="NotImplementedClick" />
+                                    <Button Content="🔑 微软登录" Command="{Binding LoginMicrosoftCommand}"
+                                            IsEnabled="{Binding !IsMicrosoftLoggingIn}" />
                                     <Button Content="🔄 第三方登录" Tag="第三方认证登录(Authlib)" Click="NotImplementedClick" />
                                     <Button Content="📱 统一通行证" Tag="统一通行证登录" Click="NotImplementedClick" />
                                 </StackPanel>
+                                <!-- 微软浏览器回显登录 -->
+                                <Border Background="#313244" CornerRadius="6" Padding="12" Margin="0,12,0,0">
+                                    <StackPanel>
+                                        <TextBlock FontSize="11" Foreground="#a6adc8" TextWrapping="Wrap"
+                                                   Text="微软登录采用浏览器回显方式：点击「微软登录」后浏览器会打开微软授权页，登录成功后把地址栏中 oauth20_desktop.srf?code=... 的完整地址粘贴到下方，再点「完成登录」。" />
+                                        <TextBox Text="{Binding MicrosoftCallback}" Margin="0,8,0,0"
+                                                 Watermark="粘贴浏览器回调地址 (oauth20_desktop.srf?code=...)" />
+                                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                            <Button Classes="primary" Content="✔ 完成登录"
+                                                    Command="{Binding CompleteMicrosoftLoginCommand}"
+                                                    IsEnabled="{Binding !IsMicrosoftLoggingIn}" />
+                                            <TextBlock Text="登录中..." FontSize="11" Foreground="#89b4fa"
+                                                       VerticalAlignment="Center" Margin="8,0,0,0"
+                                                       IsVisible="{Binding IsMicrosoftLoggingIn}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
                             </Border>
 
                             <!-- 已保存账户 -->
@@ -545,6 +563,33 @@
                 <TabItem Header="⚙ 设置">
                     <ScrollViewer x:Name="SettingsPanel">
                         <StackPanel Margin="4" x:DataType="vm:LaunchViewModel">
+                            <!-- 版本设置选择（对应 PCL2 的版本设置/全局设置） -->
+                            <Border Classes="card">
+                                <TextBlock Classes="title" Text="🎯 版本设置" />
+                                <TextBlock FontSize="11" Foreground="#a6adc8" Margin="0,0,0,8" TextWrapping="Wrap"
+                                           Text="选择要编辑设置的版本。选中具体版本后，下方设置仅对该版本生效；选择「(全局默认)」则作为所有未单独配置版本的默认设置（对应 PCL2 的全局设置）。" />
+                                <ComboBox ItemsSource="{Binding InstalledVersions}"
+                                          SelectedItem="{Binding SelectedVersion}" />
+                                <TextBlock FontSize="10" Foreground="#6c7086" Margin="0,6,0,0"
+                                           Text="提示：切换版本时会自动加载该版本的独立设置。" />
+                            </Border>
+
+                            <!-- 游戏目录（对应 PCL2 的游戏目录设置） -->
+                            <Border Classes="card">
+                                <TextBlock Classes="title" Text="📁 游戏目录" />
+                                <TextBlock FontSize="11" Foreground="#a6adc8" Margin="0,0,0,8" TextWrapping="Wrap"
+                                           Text="游戏安装及数据保存的位置。Windows 下默认与原版 PCL2 / 官方启动器共享 %AppData%\\.minecraft。" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Text="{Binding GameDirectory}" Watermark="游戏目录路径" />
+                                    <Button Grid.Column="1" Content="📂 浏览..." Tag="浏览选择游戏目录"
+                                            Click="BrowseGameDirectoryClick" Margin="8,0,0,0" />
+                                </Grid>
+                            </Border>
+
                             <Border Classes="card">
                                 <TextBlock Classes="title" Text="☕ Java 运行时设置" />
                                 <StackPanel>
@@ -557,6 +602,15 @@
                                         <Button Content="📂 浏览..." Tag="浏览选择Java" Click="NotImplementedClick" />
                                         <Button Content="⬇ 下载Java" Tag="Java下载安装" Click="NotImplementedClick" />
                                     </StackPanel>
+                                    <Border Background="#313244" CornerRadius="6" Padding="12" Margin="0,12,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🖥 当前系统" FontSize="10" Foreground="#a6adc8" />
+                                            <TextBlock Text="{Binding SystemInfo}" FontSize="11" Foreground="#cdd6f4" Margin="0,2,0,0" />
+                                            <TextBlock FontSize="10" Margin="0,6,0,0"
+                                                       Foreground="#a6adc8"
+                                                       Text="{Binding PclInteropNote}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Border>
                                 </StackPanel>
                             </Border>
 

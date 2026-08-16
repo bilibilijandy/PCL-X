@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using PCL_X.Models;
+using PCL_X.Modules;
 
 namespace PCL_X.Services;
 
@@ -13,6 +14,7 @@ public interface ILaunchService
 {
     Task<Process?> LaunchGameAsync(string versionId, UserAccount user, GameSettings? settings = null);
     Task<string> GenerateLaunchArgumentsAsync(string versionId, UserAccount user, GameSettings? settings = null);
+    Task<List<string>> FindJavaPathsAsync();
     Task<string?> FindJavaPathAsync();
 }
 
@@ -25,30 +27,46 @@ public class LaunchService : ILaunchService
         _configService = configService;
     }
 
-    public async Task<string?> FindJavaPathAsync()
+    /// <summary>查找系统可用的 Java 路径（含 PCL2 注册表中的 Java 列表）。</summary>
+    public async Task<List<string>> FindJavaPathsAsync()
     {
         return await Task.Run(() =>
         {
+            var found = new List<string>();
+            var exe = ModPlatform.JavaExeName;
+
+            // 1) JAVA_HOME
             var javaHome = Environment.GetEnvironmentVariable("JAVA_HOME");
             if (!string.IsNullOrEmpty(javaHome))
             {
-                var p = Path.Combine(javaHome, "bin", OperatingSystem.IsWindows() ? "java.exe" : "java");
-                if (File.Exists(p)) return p;
+                var p = Path.Combine(javaHome, "bin", exe);
+                if (File.Exists(p) && !found.Contains(p)) found.Add(p);
             }
 
-            if (OperatingSystem.IsWindows())
+            // 2) PCL2 注册表中的 Java 列表（Windows 互通）
+            foreach (var p in ModPclConfig.ReadPcl2JavaPaths())
+            {
+                if (File.Exists(p) && !found.Contains(p)) found.Add(p);
+            }
+
+            // 3) 扫描常见安装目录
+            if (ModPlatform.IsWindows)
             {
                 var paths = new[]
                 {
                     @"C:\Program Files\Java",
                     @"C:\Program Files (x86)\Java",
+                    @"C:\Program Files\Eclipse Adoptium",
+                    @"C:\Program Files\Microsoft",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Eclipse Adoptium"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", "jdk-17.0.12.7-hotspot")
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft")
                 };
-                foreach (var basePath in paths.Where(Directory.Exists))
+                foreach (var basePath in paths.Distinct().Where(Directory.Exists))
                 {
-                    var java = Directory.GetFiles(basePath, "java.exe", SearchOption.AllDirectories).FirstOrDefault();
-                    if (java != null) return java;
+                    foreach (var java in SearchJavaExe(basePath, exe))
+                    {
+                        if (!found.Contains(java)) found.Add(java);
+                    }
                 }
             }
             else
@@ -63,20 +81,42 @@ public class LaunchService : ILaunchService
                     using var p = Process.Start(proc);
                     p?.WaitForExit(5000);
                     var output = p?.StandardOutput.ReadToEnd()?.Trim();
-                    if (!string.IsNullOrEmpty(output) && File.Exists(output))
-                        return output;
+                    if (!string.IsNullOrEmpty(output) && File.Exists(output) && !found.Contains(output))
+                        found.Add(output.Trim());
                 }
                 catch { }
             }
-            return "java";
+
+            if (found.Count == 0) found.Add(ModPlatform.JavaExeName);
+            return found;
         });
+    }
+
+    private static IEnumerable<string> SearchJavaExe(string basePath, string exeName)
+    {
+        try
+        {
+            return Directory.GetDirectories(basePath)
+                .Select(d => Path.Combine(d, "bin", exeName))
+                .Where(File.Exists);
+        }
+        catch
+        {
+            return Enumerable.Empty<string>();
+        }
+    }
+
+    public async Task<string?> FindJavaPathAsync()
+    {
+        var paths = await FindJavaPathsAsync();
+        return paths.FirstOrDefault(p => p != ModPlatform.JavaExeName) ?? ModPlatform.JavaExeName;
     }
 
     public async Task<string> GenerateLaunchArgumentsAsync(string versionId, UserAccount user, GameSettings? settings = null)
     {
         var gameDir = _configService.GetGameDirectory();
-        var config = await _configService.LoadConfigAsync();
-        settings ??= config.Settings;
+        // 未显式传入设置时，使用该版本的独立设置（无独立设置则回退到全局默认）
+        settings ??= await _configService.GetSettingsForVersionAsync(versionId);
 
         var versionDir = Path.Combine(gameDir, "versions", versionId);
         var jsonPath = Path.Combine(versionDir, $"{versionId}.json");
@@ -90,35 +130,45 @@ public class LaunchService : ILaunchService
         using var doc = JsonDocument.Parse(json);
         var root = doc.RootElement;
 
-        var libraries = new List<string>();
         var clientJar = Path.Combine(versionDir, $"{versionId}.jar");
-        libraries.Add(clientJar);
+        var libraries = new List<string> { clientJar };
 
+        // 解析 classpath：普通库 + natives 分类器 jar
+        var nativeJars = new List<string>();
         if (root.TryGetProperty("libraries", out var libs))
         {
             foreach (var lib in libs.EnumerateArray())
             {
-                if (lib.TryGetProperty("downloads", out var downloads))
-                {
-                    if (downloads.TryGetProperty("artifact", out var artifact))
-                    {
-                        if (artifact.TryGetProperty("path", out var p))
-                        {
-                            var lp = Path.Combine(gameDir, "libraries", p.GetString() ?? "");
-                            if (File.Exists(lp)) libraries.Add(lp);
-                        }
-                    }
-                }
+                var resolved = ModVersion.ResolveLibrary(lib);
+                if (resolved == null) continue;
+
+                var lp = Path.Combine(gameDir, "libraries", resolved.Path.Replace('/', Path.DirectorySeparatorChar));
+                if (!File.Exists(lp)) continue;
+
+                if (resolved.IsNative)
+                    nativeJars.Add(lp);
+                else
+                    libraries.Add(lp);
             }
         }
 
-        var javaPath = string.IsNullOrEmpty(settings.JavaPath) || settings.JavaPath == "java"
-            ? (await FindJavaPathAsync() ?? "java")
+        // 若 natives 尚未解压，则解压（不同系统提取的文件不同）
+        ModNative.ClearNativeDir(nativeDir);
+        foreach (var jar in nativeJars)
+        {
+            await Task.Run(() => ModNative.ExtractNativeJar(jar, nativeDir, null));
+        }
+
+        libraries.AddRange(nativeJars);
+
+        var javaPath = string.IsNullOrEmpty(settings.JavaPath) || settings.JavaPath == ModPlatform.JavaExeName
+            ? (await FindJavaPathAsync() ?? ModPlatform.JavaExeName)
             : settings.JavaPath;
 
         var mainClass = root.TryGetProperty("mainClass", out var mc) ? mc.GetString() ?? "" : "net.minecraft.client.main.Main";
 
-        var classpath = string.Join(Path.PathSeparator == ';' ? ";" : ":", libraries);
+        var separator = OperatingSystem.IsWindows() ? ";" : ":";
+        var classpath = string.Join(separator, libraries);
 
         var gameArgs = new List<string>();
         if (root.TryGetProperty("minecraftArguments", out var legacyArgs))
@@ -131,6 +181,19 @@ public class LaunchService : ILaunchService
             {
                 if (a.ValueKind == JsonValueKind.String)
                     gameArgs.Add(a.GetString() ?? "");
+                else if (a.ValueKind == JsonValueKind.Object && a.TryGetProperty("rules", out _))
+                {
+                    // 带 rules 的 game 参数：按当前系统判断是否加入
+                    if (a.TryGetProperty("value", out var val))
+                    {
+                        if (val.ValueKind == JsonValueKind.String)
+                            gameArgs.Add(val.GetString() ?? "");
+                        else if (val.ValueKind == JsonValueKind.Array)
+                            foreach (var s in val.EnumerateArray())
+                                if (s.ValueKind == JsonValueKind.String)
+                                    gameArgs.Add(s.GetString() ?? "");
+                    }
+                }
             }
         }
 
@@ -148,6 +211,10 @@ public class LaunchService : ILaunchService
             $"\"{classpath}\"",
             mainClass
         };
+
+        // macOS 需要 -XstartOnFirstThread 才能运行原生窗口
+        if (ModPlatform.IsOsx)
+            jvmArgs.Insert(0, "-XstartOnFirstThread");
 
         if (!string.IsNullOrWhiteSpace(settings.JvmArguments))
         {
@@ -197,15 +264,14 @@ public class LaunchService : ILaunchService
             throw new ArgumentException("用户名不能为空", nameof(user));
 
         var config = await _configService.LoadConfigAsync();
-        settings ??= config.Settings;
+        settings ??= await _configService.GetSettingsForVersionAsync(versionId);
 
-        var config2 = await _configService.LoadConfigAsync();
-        settings.JavaPath = string.IsNullOrEmpty(settings.JavaPath) || settings.JavaPath == "java"
-            ? (await FindJavaPathAsync() ?? "java")
+        settings.JavaPath = string.IsNullOrEmpty(settings.JavaPath) || settings.JavaPath == ModPlatform.JavaExeName
+            ? (await FindJavaPathAsync() ?? ModPlatform.JavaExeName)
             : settings.JavaPath;
 
         var args = await GenerateLaunchArgumentsAsync(versionId, user, settings);
-        var gameDir = config2.GameDirectory;
+        var gameDir = config.GameDirectory;
 
         var startInfo = new ProcessStartInfo
         {

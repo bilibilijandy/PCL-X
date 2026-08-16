@@ -60,6 +60,14 @@ public partial class MainViewModel : ObservableObject
     public async Task InitializeAsync()
     {
         Config = await _configService.LoadConfigAsync();
+
+        // Windows 下尝试从原版 PCL2 导入账户数据（互通）
+        try
+        {
+            await _authService.ImportPcl2AccountsAsync();
+        }
+        catch { }
+
         CurrentUser = await _authService.GetCurrentUserAsync();
         await RefreshInstalledVersionsAsync();
         await LoadVersionsAsync();
@@ -134,7 +142,20 @@ public partial class MainViewModel : ObservableObject
 
         try
         {
-            var process = await _launchService.LaunchGameAsync(SelectedVersion, CurrentUser, Config.Settings);
+            // 微软账号令牌约 24 小时过期，启动前静默刷新（失败则提示重新登录）
+            if (CurrentUser.Type == AccountType.Microsoft && !string.IsNullOrEmpty(CurrentUser.RefreshToken))
+            {
+                if (!await _authService.RefreshMicrosoftAccountAsync(CurrentUser))
+                {
+                    await _messageBox.ShowAsync(
+                        "微软账号登录已过期或失效，请在「账户」面板重新登录微软账号。", "登录失效");
+                    IsLaunching = false;
+                    StatusText = "启动取消：微软账号登录失效";
+                    return;
+                }
+            }
+
+            var process = await _launchService.LaunchGameAsync(SelectedVersion, CurrentUser, null);
             if (process != null)
             {
                 StatusText = $"Minecraft {SelectedVersion} 已启动 (PID: {process.Id})";

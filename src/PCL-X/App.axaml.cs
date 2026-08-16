@@ -22,6 +22,7 @@ public partial class App : Application
         var services = new ServiceCollection();
 
         services.AddSingleton<IAuthService, AuthService>();
+        services.AddSingleton<MicrosoftAuthService>();
         services.AddSingleton<IDownloadService, DownloadService>();
         services.AddSingleton<ILaunchService, LaunchService>();
         services.AddSingleton<IMessageBoxService, MessageBoxService>();
