@@ -11,118 +11,204 @@
         Width="1000" Height="680"
         MinWidth="860" MinHeight="560">
 
+    <!-- 与 PCL2 一致的蓝白配色表 -->
     <Window.Resources>
+        <Color x:Key="ClrBlue">#1370f3</Color>
+        <Color x:Key="ClrBlueHover">#4890f5</Color>
+        <Color x:Key="ClrBlueLight">#96c0f9</Color>
+        <Color x:Key="ClrBlueBg">#d5e6fd</Color>
+        <Color x:Key="ClrBgl">#eaf2fe</Color>
+        <Color x:Key="ClrDeep">#343d4a</Color>
+        <Color x:Key="ClrGray">#737373</Color>
+        <Color x:Key="ClrGrayLight">#a6a6a6</Color>
+        <Color x:Key="ClrWhite">#ffffff</Color>
+        <SolidColorBrush x:Key="BrushBgl" Color="{StaticResource ClrBgl}" />
+        <SolidColorBrush x:Key="BrushBlue" Color="{StaticResource ClrBlue}" />
+        <SolidColorBrush x:Key="BrushBlueBg" Color="{StaticResource ClrBlueBg}" />
+        <SolidColorBrush x:Key="BrushBlueHover" Color="{StaticResource ClrBlueHover}" />
+        <SolidColorBrush x:Key="BrushBlueLight" Color="{StaticResource ClrBlueLight}" />
+        <SolidColorBrush x:Key="BrushDeep" Color="{StaticResource ClrDeep}" />
+        <SolidColorBrush x:Key="BrushWhite" Color="{StaticResource ClrWhite}" />
+        <SolidColorBrush x:Key="BrushGray" Color="{StaticResource ClrGray}" />
+        <SolidColorBrush x:Key="BrushGrayLight" Color="{StaticResource ClrGrayLight}" />
+
         <c:VersionTypeColorConverter x:Key="TypeColorConv" />
         <c:VersionInstalledColorConverter x:Key="InstalledConv" />
         <c:VersionInstalledTextConverter x:Key="InstalledTextConv" />
+
+        <!-- 顶部标题栏的蓝色渐变背景 -->
+        <LinearGradientBrush x:Key="BrushTitle" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="{StaticResource ClrBlue}" Offset="0" />
+            <GradientStop Color="{StaticResource ClrBlueHover}" Offset="1" />
+        </LinearGradientBrush>
     </Window.Resources>
 
     <Window.Styles>
         <Style Selector="Window">
-            <Setter Property="Background" Value="#1e1e2e" />
-            <Setter Property="Foreground" Value="#cdd6f4" />
-            <Setter Property="FontFamily" Value="Microsoft YaHei UI, Segoe UI, sans-serif" />
+            <Setter Property="Background" Value="{StaticResource BrushBgl}" />
+            <Setter Property="Foreground" Value="{StaticResource BrushDeep}" />
+            <Setter Property="FontFamily" Value="Microsoft YaHei UI, PingFang SC, Segoe UI, sans-serif" />
         </Style>
+
+        <!-- 按钮：PCL2 白色圆角按钮 -->
         <Style Selector="Button">
-            <Setter Property="Background" Value="#45475a" />
-            <Setter Property="Foreground" Value="#cdd6f4" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Background" Value="{StaticResource BrushWhite}" />
+            <Setter Property="Foreground" Value="{StaticResource BrushDeep}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBlueBg}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="14,7" />
             <Setter Property="Margin" Value="2" />
         </Style>
         <Style Selector="Button:pointerover">
-            <Setter Property="Background" Value="#585b70" />
+            <Setter Property="Background" Value="#eef4ff" />
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBlueHover}" />
+        </Style>
+        <Style Selector="Button:pressed">
+            <Setter Property="Background" Value="{StaticResource BrushBlueLight}" />
         </Style>
         <Style Selector="Button:disabled">
-            <Setter Property="Background" Value="#313244" />
-            <Setter Property="Foreground" Value="#6c7086" />
+            <Setter Property="Background" Value="#f0f0f0" />
+            <Setter Property="Foreground" Value="{StaticResource BrushGrayLight}" />
+            <Setter Property="BorderBrush" Value="#ebebeb" />
         </Style>
-        <Style Selector="ListBox">
-            <Setter Property="Background" Value="#181825" />
-            <Setter Property="BorderThickness" Value="0" />
-        </Style>
-        <Style Selector="ListBoxItem">
+
+        <!-- 顶部导航按钮：透明底 + 白色文字 -->
+        <Style Selector="Button.nav">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#cdd6f4" />
-            <Setter Property="Padding" Value="10,6" />
-            <Setter Property="Margin" Value="2,1" />
-            <Setter Property="CornerRadius" Value="4" />
-        </Style>
-        <Style Selector="ListBoxItem:pointerover">
-            <Setter Property="Background" Value="#313244" />
-        </Style>
-        <Style Selector="ListBoxItem:selected">
-            <Setter Property="Background" Value="#89b4fa" />
-            <Setter Property="Foreground" Value="#1e1e2e" />
-        </Style>
-        <Style Selector="TextBox">
-            <Setter Property="Background" Value="#181825" />
-            <Setter Property="Foreground" Value="#cdd6f4" />
-            <Setter Property="BorderBrush" Value="#45475a" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Padding" Value="8,4" />
-        </Style>
-        <Style Selector="TextBox:focus">
-            <Setter Property="BorderBrush" Value="#89b4fa" />
-        </Style>
-        <Style Selector="ComboBox">
-            <Setter Property="Background" Value="#181825" />
-            <Setter Property="Foreground" Value="#cdd6f4" />
-            <Setter Property="BorderBrush" Value="#45475a" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="4" />
-        </Style>
-        <Style Selector="ProgressBar">
-            <Setter Property="Foreground" Value="#89b4fa" />
-            <Setter Property="Background" Value="#313244" />
-            <Setter Property="Height" Value="8" />
-        </Style>
-        <Style Selector="TabControl">
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-        <Style Selector="TabItem">
-            <Setter Property="Background" Value="#313244" />
-            <Setter Property="Foreground" Value="#a6adc8" />
-            <Setter Property="Padding" Value="20,10" />
-            <Setter Property="Margin" Value="0,0,2,0" />
+            <Setter Property="Foreground" Value="White" />
             <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="18,8" />
+            <Setter Property="FontSize" Value="14" />
         </Style>
-        <Style Selector="TabItem:pointerover">
-            <Setter Property="Background" Value="#45475a" />
+        <Style Selector="Button.nav:pointerover">
+            <Setter Property="Background" Value="#33ffffff" />
         </Style>
-        <Style Selector="TabItem:selected">
-            <Setter Property="Background" Value="#1e1e2e" />
-            <Setter Property="Foreground" Value="#cdd6f4" />
+        <Style Selector="Button.nav:pressed">
+            <Setter Property="Background" Value="#55ffffff" />
         </Style>
-        <Style Selector="Border.card">
-            <Setter Property="Background" Value="#181825" />
-            <Setter Property="CornerRadius" Value="10" />
-            <Setter Property="Padding" Value="16" />
-            <Setter Property="Margin" Value="0,0,0,12" />
-        </Style>
-        <Style Selector="TextBlock.title">
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Foreground" Value="#89b4fa" />
-            <Setter Property="Margin" Value="0,0,0,10" />
-        </Style>
+
+        <!-- 主按钮：蓝色 -->
         <Style Selector="Button.primary">
-            <Setter Property="Background" Value="#89b4fa" />
-            <Setter Property="Foreground" Value="#1e1e2e" />
+            <Setter Property="Background" Value="{StaticResource BrushBlue}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
         <Style Selector="Button.primary:pointerover">
-            <Setter Property="Background" Value="#b4befe" />
+            <Setter Property="Background" Value="{StaticResource BrushBlueHover}" />
         </Style>
         <Style Selector="Button.danger">
-            <Setter Property="Background" Value="#f38ba8" />
-            <Setter Property="Foreground" Value="#1e1e2e" />
+            <Setter Property="Background" Value="#fbdddd" />
+            <Setter Property="Foreground" Value="#ce2111" />
+            <Setter Property="BorderBrush" Value="#fbdddd" />
         </Style>
         <Style Selector="Button.success">
-            <Setter Property="Background" Value="#a6e3a1" />
-            <Setter Property="Foreground" Value="#1e1e2e" />
+            <Setter Property="Background" Value="{StaticResource BrushBlue}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="Button.success:pointerover">
+            <Setter Property="Background" Value="{StaticResource BrushBlueHover}" />
+        </Style>
+
+        <!-- 顶部导航图标按钮（齿轮） -->
+        <Style Selector="Button.icon">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style Selector="Button.icon:pointerover">
+            <Setter Property="Background" Value="#33ffffff" />
+        </Style>
+
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="{StaticResource BrushWhite}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBlueBg}" />
+            <Setter Property="CornerRadius" Value="3" />
+        </Style>
+        <Style Selector="ListBoxItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource BrushDeep}" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="Margin" Value="2,1" />
+            <Setter Property="CornerRadius" Value="3" />
+        </Style>
+        <Style Selector="ListBoxItem:pointerover">
+            <Setter Property="Background" Value="#eaf2fe" />
+        </Style>
+        <Style Selector="ListBoxItem:selected">
+            <Setter Property="Background" Value="{StaticResource BrushBlue}" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="{StaticResource BrushWhite}" />
+            <Setter Property="Foreground" Value="{StaticResource BrushDeep}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBlueBg}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="8,5" />
+        </Style>
+        <Style Selector="TextBox:pointerover">
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBlueHover}" />
+        </Style>
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBlue}" />
+        </Style>
+
+        <Style Selector="ComboBox">
+            <Setter Property="Background" Value="{StaticResource BrushWhite}" />
+            <Setter Property="Foreground" Value="{StaticResource BrushDeep}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBlueBg}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="3" />
+        </Style>
+
+        <Style Selector="ProgressBar">
+            <Setter Property="Foreground" Value="{StaticResource BrushBlue}" />
+            <Setter Property="Background" Value="{StaticResource BrushBlueBg}" />
+            <Setter Property="Height" Value="8" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+
+        <Style Selector="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <!-- 隐藏 TabControl 自身的页签头，页面切换由顶部导航控制 -->
+        <Style Selector="TabItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Height" Value="0" />
+        </Style>
+
+        <!-- 白色圆角3卡片 -->
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="{StaticResource BrushWhite}" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Margin" Value="0,0,0,14" />
+        </Style>
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource BrushDeep}" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+        <Style Selector="TextBlock.hint">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{StaticResource BrushGrayLight}" />
+        </Style>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{StaticResource BrushGray}" />
         </Style>
     </Window.Styles>
 
@@ -133,164 +219,105 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- 顶部栏：Logo + 用户信息 -->
-        <Grid Grid.Row="0" Background="#181825" Height="60">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <!-- 顶部标题栏：蓝色渐变 + Logo + 横向导航 + 用户信息（参照 PCL2 PanTitle） -->
+        <Border Grid.Row="0" Height="58" Background="{StaticResource BrushTitle}" BoxShadow="0 2 8 0 #33000000">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <!-- Logo区 -->
-            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0,0,0">
-                <Border Width="36" Height="36" CornerRadius="8" Background="#89b4fa" Margin="0,0,12,0">
-                    <TextBlock Text="X" HorizontalAlignment="Center" VerticalAlignment="Center"
-                               FontSize="22" FontWeight="Bold" Foreground="#1e1e2e" />
-                </Border>
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="PCL-X" FontSize="20" FontWeight="Bold" Foreground="#cdd6f4" />
-                    <TextBlock Text="Plain Craft Launcher X · 全平台版" FontSize="11" Foreground="#6c7086" />
+                <!-- Logo 区 -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
+                    <Border Width="34" Height="34" CornerRadius="6" Background="White" Margin="0,0,11,0">
+                        <TextBlock Text="PCL" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="13" FontWeight="Bold" Foreground="{StaticResource BrushBlue}" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="PCL-X" FontSize="18" FontWeight="Bold" Foreground="White" />
+                        <TextBlock Text="Plain Craft Launcher" FontSize="10" Foreground="#ccffffff" Margin="0,-2,0,0" />
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
 
-            <!-- 顶部工具按钮（假按钮占位） -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="🏠 主页" Tag="主页面板跳转" Click="NotImplementedClick" />
-                <Button Content="📜 新闻" Tag="新闻资讯" Click="NotImplementedClick" />
-                <Button Content="🏪 市场" Tag="资源市场" Click="NotImplementedClick" />
-                <Button Content="🔧 整合包" Tag="整合包管理" Click="NotImplementedClick" />
-                <Button Content="📚 教程" Tag="使用教程" Click="NotImplementedClick" />
-            </StackPanel>
+                <!-- 横向导航（PCL2：启动/下载/联机/设置/更多） -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Classes="nav" Content="启动" Tag="0" Click="TitleNavClick" />
+                    <Button Classes="nav" Content="下载" Tag="2" Click="TitleNavClick" />
+                    <Button Classes="nav" Content="联机" Tag="5" Click="TitleNavClick" />
+                    <Button Classes="nav" Content="设置" Tag="3" Click="TitleNavClick" />
+                    <Button Classes="nav" Content="更多" Tag="6" Click="TitleNavClick" />
+                </StackPanel>
 
-            <!-- 用户信息 -->
-            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
-                <Border Background="#313244" CornerRadius="20" Padding="12,6,16,6">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="28" Height="28" Fill="#89b4fa" Margin="0,0,10,0">
+                <!-- 用户信息 / 设置 -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,16,0" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Width="30" Height="30" Fill="#ccffffff" Margin="0,0,9,0">
                             <Ellipse.Clip>
-                                <EllipseGeometry RadiusX="14" RadiusY="14" Center="14,14" />
+                                <EllipseGeometry RadiusX="15" RadiusY="15" Center="15,15" />
                             </Ellipse.Clip>
                         </Ellipse>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="{Binding CurrentUser.UserName, FallbackValue='未登录'}"
-                                       FontSize="13" FontWeight="SemiBold" Foreground="#cdd6f4" />
+                                       FontSize="13" FontWeight="SemiBold" Foreground="White" />
                             <TextBlock Text="{Binding CurrentUser.Type, FallbackValue='Offline', StringFormat='{}{0}'}"
-                                       FontSize="10" Foreground="#a6adc8" />
+                                       FontSize="10" Foreground="#ccffffff" />
                         </StackPanel>
                     </StackPanel>
-                </Border>
-                <Button Content="⚙" Tag="全局设置" Click="NotImplementedClick" Padding="12,8" />
-            </StackPanel>
-        </Grid>
-
-        <!-- 主体内容 -->
-        <Grid Grid.Row="1" Margin="16">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="260" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <!-- 左侧边栏 -->
-            <ScrollViewer Grid.Column="0">
-                <StackPanel>
-                    <!-- 快速启动区 -->
-                    <Border Classes="card">
-<StackPanel>                        <TextBlock Classes="title" Text="🎮 启动游戏" />
-                        <StackPanel>
-                            <TextBlock Text="选择版本：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
-                            <ComboBox ItemsSource="{Binding InstalledVersions}"
-                                      SelectedItem="{Binding SelectedVersion}"
-                                      PlaceholderText="未选择版本" />
-                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                                <Button Classes="success" Content="▶ 启动游戏"
-                                        Command="{Binding LaunchGameCommand}"
-                                        IsEnabled="{Binding !IsLaunching}"
-                                        Grid.ColumnSpan="2" />
-                                <Button Content="⚙ 设置" Tag="高级启动设置" Click="NotImplementedClick" />
-                            </StackPanel>
-                            <TextBlock Text="提示：若版本列表为空，请前往「下载」面板下载"
-                                       FontSize="10" Foreground="#6c7086" Margin="0,10,0,0" TextWrapping="Wrap" />
-                        </StackPanel>
-</StackPanel>                    </Border>
-
-                    <!-- 功能快捷入口 -->
-                    <Border Classes="card">
-<StackPanel>                        <TextBlock Classes="title" Text="🧰 工具箱" />
-                        <StackPanel>
-                            <Button Content="📁 .minecraft 目录" Tag="游戏目录打开" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                            <Button Content="💾 存档管理" Tag="存档管理" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                            <Button Content="🎒 Mod 管理" Tag="Mod管理" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                            <Button Content="🎨 材质包管理" Tag="材质包管理" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                            <Button Content="📦 模组下载" Tag="模组下载站" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                            <Button Content="🖼 截图文件夹" Tag="截图文件夹" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                        </StackPanel>
-</StackPanel>                    </Border>
-
-                    <!-- 其他快捷按钮 -->
-                    <Border Classes="card">
-<StackPanel>                        <TextBlock Classes="title" Text="⭐ 更多功能" />
-                        <StackPanel>
-                            <Button Content="🔍 版本隔离" Tag="版本隔离设置" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                            <Button Content="💽 自动备份" Tag="自动备份" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                            <Button Content="🌐 服务器列表" Tag="服务器列表" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                            <Button Content="☕ Java 自动安装" Tag="Java自动安装" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                            <Button Content="📱 联机大厅" Tag="联机功能" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                        </StackPanel>
-</StackPanel>                    </Border>
+                    <Button Classes="icon" Content="⚙" Tag="全局设置" Click="NotImplementedClick" Margin="10,0,0,0" />
                 </StackPanel>
-            </ScrollViewer>
+            </Grid>
+        </Border>
 
-            <!-- 右侧主面板：TabControl -->
-            <TabControl Grid.Column="1" Margin="12,0,0,0" x:Name="MainTabs">
-                <TabItem Header="🏠 首页">
-                    <ScrollViewer>
-                        <StackPanel Margin="4">
-                            <!-- 欢迎区 -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="👋 欢迎使用 PCL-X" />
-                                <TextBlock TextWrapping="Wrap" Foreground="#cdd6f4" Margin="0,0,0,8"
-                                           Text="PCL-X 是 PCL (Plain Craft Launcher) 的 .NET 移植版本，基于 Avalonia UI 实现全平台兼容，支持 Windows、macOS 和 Linux。本版本正在开发中，目前已实现离线用户登录和游戏下载启动功能。" />
-                                <Grid Margin="0,8,0,0">
+        <!-- 主体内容：浅蓝背景，页面由顶部导航切换 -->
+        <TabControl Grid.Row="1" x:Name="MainTabs" Background="Transparent" Margin="16,14,16,10">
+
+            <!-- 启动 / 首页 -->
+            <TabItem Header="">
+                <ScrollViewer>
+                    <StackPanel Margin="0">
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="启动游戏" />
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="#313244" CornerRadius="8" Padding="14" Margin="0,0,6,0">
-                                        <StackPanel>
-                                            <TextBlock Text="1. 添加账户" FontSize="12" FontWeight="Bold" Foreground="#89b4fa" />
-                                            <TextBlock Text="前往「账户」标签，输入用户名即可创建离线账户" FontSize="11" Foreground="#a6adc8" Margin="0,4,0,0" TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border Grid.Column="1" Background="#313244" CornerRadius="8" Padding="14" Margin="6,0,6,0">
-                                        <StackPanel>
-                                            <TextBlock Text="2. 下载版本" FontSize="12" FontWeight="Bold" Foreground="#f9e2af" />
-                                            <TextBlock Text="前往「下载」标签，选择并下载 Minecraft 版本" FontSize="11" Foreground="#a6adc8" Margin="0,4,0,0" TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border Grid.Column="2" Background="#313244" CornerRadius="8" Padding="14" Margin="6,0,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="3. 启动游戏" FontSize="12" FontWeight="Bold" Foreground="#a6e3a1" />
-                                            <TextBlock Text="在左侧选择版本，点击启动按钮即可开始游戏" FontSize="11" Foreground="#a6adc8" Margin="0,4,0,0" TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </Border>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Classes="label" Text="选择版本：" Margin="0,0,0,4" />
+                                        <ComboBox ItemsSource="{Binding InstalledVersions}"
+                                                  SelectedItem="{Binding SelectedVersion}"
+                                                  PlaceholderText="未选择版本" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                                        <Button Classes="success" Content="启动游戏"
+                                                Command="{Binding LaunchGameCommand}"
+                                                IsEnabled="{Binding !IsLaunching}"
+                                                Padding="22,9" />
+                                        <Button Content="高级设置" Tag="高级启动设置" Click="NotImplementedClick" />
+                                    </StackPanel>
                                 </Grid>
-</StackPanel>                            </Border>
+                                <TextBlock Classes="hint" Text="提示：若版本列表为空，请前往「下载」页面下载版本。"
+                                           Margin="0,10,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
 
-                            <!-- 下载进度（显示时） -->
-                            <Border Classes="card" IsVisible="{Binding IsDownloading}">
-<StackPanel>                                <TextBlock Classes="title" Text="⬇ 下载进度" />
-                                <StackPanel>
-                                    <TextBlock Text="{Binding StatusText}" Margin="0,0,0,8" />
-                                    <ProgressBar Value="{Binding DownloadProgress}" IsIndeterminate="False" />
-                                    <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:F1}%'}"
-                                               HorizontalAlignment="Right" FontSize="11" Foreground="#a6adc8" Margin="0,4,0,0" />
-                                </StackPanel>
-</StackPanel>                            </Border>
+                        <!-- 下载进度（显示时） -->
+                        <Border Classes="card" IsVisible="{Binding IsDownloading}">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="下载进度" />
+                                <TextBlock Text="{Binding StatusText}" Margin="0,0,0,8" />
+                                <ProgressBar Value="{Binding DownloadProgress}" IsIndeterminate="False" />
+                                <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:F1}%'}"
+                                           HorizontalAlignment="Right" FontSize="11" Foreground="{StaticResource BrushGrayLight}" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
 
-                            <!-- 状态信息 -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="📊 状态信息" />
+                        <!-- 状态信息 -->
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="状态信息" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120" />
@@ -302,20 +329,22 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="当前用户：" Foreground="#a6adc8" />
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="当前用户：" Classes="label" />
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentUser.UserName, FallbackValue='未登录'}" />
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="选中版本：" Foreground="#a6adc8" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="选中版本：" Classes="label" />
                                     <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedVersion, FallbackValue='未选择'}" />
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="已安装版本：" Foreground="#a6adc8" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="已安装版本：" Classes="label" />
                                     <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding InstalledVersions.Count, StringFormat='{}共 {0} 个'}" />
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="可用版本：" Foreground="#a6adc8" />
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="可用版本：" Classes="label" />
                                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AvailableVersions.Count, StringFormat='{}共 {0} 个'}" />
                                 </Grid>
-</StackPanel>                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <!-- 关于 -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="ℹ 关于 PCL-X" />
+                        <!-- 关于 -->
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="关于 PCL-X" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120" />
@@ -327,28 +356,29 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="版本：" Foreground="#a6adc8" />
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="版本：" Classes="label" />
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="1.0.0 (Alpha)" />
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="框架：" Foreground="#a6adc8" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="框架：" Classes="label" />
                                     <TextBlock Grid.Row="1" Grid.Column="1" Text=".NET 8.0 + Avalonia UI" />
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="平台：" Foreground="#a6adc8" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="平台：" Classes="label" />
                                     <TextBlock Grid.Row="2" Grid.Column="1" Text="Windows / macOS / Linux (全平台)" />
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="开源地址：" Foreground="#a6adc8" />
-                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="github.com/bilibilijandy/PCL-X" Foreground="#89b4fa" />
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="开源地址：" Classes="label" />
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="github.com/bilibilijandy/PCL-X" Foreground="{StaticResource BrushBlue}" />
                                 </Grid>
-</StackPanel>                            </Border>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-                <!-- 账户管理 Tab -->
-                <TabItem Header="👤 账户">
-                    <ScrollViewer x:Name="LoginPanel">
-                        <StackPanel Margin="4" x:DataType="vm:LoginViewModel">
-                            <!-- 离线登录 -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="🆕 添加离线账户" />
-                                <TextBlock FontSize="12" Foreground="#a6adc8" Margin="0,0,0,10" TextWrapping="Wrap"
+            <!-- 账户 -->
+            <TabItem Header="">
+                <ScrollViewer x:Name="LoginPanel">
+                    <StackPanel x:DataType="vm:LoginViewModel">
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="添加离线账户" />
+                                <TextBlock Classes="hint" Margin="0,0,0,10" TextWrapping="Wrap"
                                            Text="离线模式无需微软账户即可使用，可进入单人游戏及离线服务器。用户名长度 3-16 个字符。" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -357,39 +387,40 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBox Grid.Column="0" Watermark="请输入用户名 (3-16字符)"
                                              Text="{Binding UserName}" />
-                                    <Button Grid.Column="1" Classes="primary" Content="＋ 创建离线用户"
+                                    <Button Grid.Column="1" Classes="primary" Content="创建离线用户"
                                             Command="{Binding LoginOfflineCommand}"
                                             IsEnabled="{Binding !IsLoggingIn}"
                                             Margin="8,0,0,0" />
                                 </Grid>
                                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                                    <Button Content="🔑 微软登录" Command="{Binding LoginMicrosoftCommand}"
+                                    <Button Content="微软登录" Command="{Binding LoginMicrosoftCommand}"
                                             IsEnabled="{Binding !IsMicrosoftLoggingIn}" />
-                                    <Button Content="🔄 第三方登录" Tag="第三方认证登录(Authlib)" Click="NotImplementedClick" />
-                                    <Button Content="📱 统一通行证" Tag="统一通行证登录" Click="NotImplementedClick" />
+                                    <Button Content="第三方登录" Tag="第三方认证登录(Authlib)" Click="NotImplementedClick" />
+                                    <Button Content="统一通行证" Tag="统一通行证登录" Click="NotImplementedClick" />
                                 </StackPanel>
-                                <!-- 微软浏览器回显登录 -->
-                                <Border Background="#313244" CornerRadius="6" Padding="12" Margin="0,12,0,0">
+                                <Border Background="#f2f7ff" CornerRadius="3" Padding="12" Margin="0,12,0,0"
+                                        BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="1">
                                     <StackPanel>
-                                        <TextBlock FontSize="11" Foreground="#a6adc8" TextWrapping="Wrap"
+                                        <TextBlock Classes="hint" TextWrapping="Wrap"
                                                    Text="微软登录采用浏览器回显方式：点击「微软登录」后浏览器会打开微软授权页，登录成功后把地址栏中 oauth20_desktop.srf?code=... 的完整地址粘贴到下方，再点「完成登录」。" />
                                         <TextBox Text="{Binding MicrosoftCallback}" Margin="0,8,0,0"
                                                  Watermark="粘贴浏览器回调地址 (oauth20_desktop.srf?code=...)" />
                                         <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                            <Button Classes="primary" Content="✔ 完成登录"
+                                            <Button Classes="primary" Content="完成登录"
                                                     Command="{Binding CompleteMicrosoftLoginCommand}"
                                                     IsEnabled="{Binding !IsMicrosoftLoggingIn}" />
-                                            <TextBlock Text="登录中..." FontSize="11" Foreground="#89b4fa"
+                                            <TextBlock Text="登录中..." FontSize="11" Foreground="{StaticResource BrushBlue}"
                                                        VerticalAlignment="Center" Margin="8,0,0,0"
                                                        IsVisible="{Binding IsMicrosoftLoggingIn}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>
-</StackPanel>                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <!-- 已保存账户 -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="📋 已保存账户" />
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="已保存账户" />
                                 <ListBox ItemsSource="{Binding SavedAccounts}"
                                          SelectedItem="{Binding SelectedAccount}"
                                          Height="260">
@@ -401,20 +432,20 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <Ellipse Grid.Column="0" Width="32" Height="32" Fill="#89b4fa" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                                <Ellipse Grid.Column="0" Width="32" Height="32" Fill="{StaticResource BrushBgl}" Margin="0,0,12,0" VerticalAlignment="Center" />
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding UserName}" FontWeight="Bold" FontSize="13" />
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Type}" FontSize="10" Foreground="#a6adc8" Margin="0,0,10,0" />
-                                                        <TextBlock Text="{Binding Uuid, StringFormat='UUID: {}'}" FontSize="10" Foreground="#6c7086" TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Text="{Binding Type}" FontSize="10" Classes="label" Margin="0,0,10,0" />
+                                                        <TextBlock Text="{Binding Uuid, StringFormat='UUID: {}'}" FontSize="10" Classes="hint" TextTrimming="CharacterEllipsis" />
                                                     </StackPanel>
                                                 </StackPanel>
                                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                                    <Button Content="✓ 选择"
+                                                    <Button Content="选择"
                                                             Command="{Binding $parent[ListBox].DataContext.SelectAccountCommand}"
                                                             CommandParameter="{Binding}"
                                                             Padding="10,4" FontSize="11" />
-                                                    <Button Classes="danger" Content="✕ 删除"
+                                                    <Button Classes="danger" Content="删除"
                                                             Command="{Binding $parent[ListBox].DataContext.RemoveAccountCommand}"
                                                             CommandParameter="{Binding}"
                                                             Padding="10,4" FontSize="11" />
@@ -423,42 +454,45 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-</StackPanel>                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <!-- 皮肤管理（占位） -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="👕 皮肤与披风" />
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="皮肤与披风" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Width="120" Height="240" Background="#313244" CornerRadius="8" Margin="0,0,16,0">
+                                    <Border Grid.Column="0" Width="120" Height="240" Background="#f2f7ff" CornerRadius="3" Margin="0,0,16,0"
+                                            BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="1">
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <TextBlock Text="👤" FontSize="60" HorizontalAlignment="Center" />
-                                            <TextBlock Text="角色预览" FontSize="11" Foreground="#6c7086" HorizontalAlignment="Center" Margin="0,8,0,0" />
+                                            <TextBlock Text="角色预览" FontSize="11" Classes="hint" HorizontalAlignment="Center" Margin="0,8,0,0" />
                                         </StackPanel>
                                     </Border>
                                     <StackPanel Grid.Column="1">
-                                        <Button Content="⬆ 上传皮肤" Tag="皮肤上传" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                                        <Button Content="🎨 选择皮肤" Tag="皮肤选择库" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                                        <Button Content="🌐 披风管理" Tag="披风管理" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                                        <Button Content="👁  3D预览" Tag="3D皮肤预览" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
-                                        <Button Content="🔄 更换模型" Tag="Steve/Alex模型切换" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
+                                        <Button Content="上传皮肤" Tag="皮肤上传" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
+                                        <Button Content="选择皮肤" Tag="皮肤选择库" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
+                                        <Button Content="披风管理" Tag="披风管理" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
+                                        <Button Content="3D预览" Tag="3D皮肤预览" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
+                                        <Button Content="更换模型" Tag="Steve/Alex模型切换" Click="NotImplementedClick" HorizontalAlignment="Stretch" />
                                     </StackPanel>
                                 </Grid>
-</StackPanel>                            </Border>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-                <!-- 下载 Tab -->
-                <TabItem Header="⬇ 下载">
-                    <ScrollViewer x:Name="DownloadPanel">
-                        <StackPanel Margin="4" x:DataType="vm:DownloadViewModel">
-                            <!-- 下载控制区 -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="🎮 版本下载" />
+            <!-- 下载 -->
+            <TabItem Header="">
+                <ScrollViewer x:Name="DownloadPanel">
+                    <StackPanel x:DataType="vm:DownloadViewModel">
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="版本下载" />
                                 <Grid Margin="0,0,0,12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -467,25 +501,26 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBox Grid.Column="0" Watermark="搜索版本号..."
                                              Text="{Binding VersionFilter}" />
-                                    <Button Grid.Column="1" Content="🔄 刷新列表"
+                                    <Button Grid.Column="1" Content="刷新列表"
                                             Command="{Binding RefreshCommand}" Margin="8,0,0,0" />
-                                    <Button Grid.Column="2" Classes="primary" Content="⬇ 下载选中版本"
+                                    <Button Grid.Column="2" Classes="primary" Content="下载选中版本"
                                             Command="{Binding DownloadSelectedCommand}"
                                             IsEnabled="{Binding !IsDownloading}"
                                             Margin="8,0,0,0" />
                                 </Grid>
 
-                                <!-- 下载进度 -->
-                                <Border Background="#313244" CornerRadius="6" Padding="12" IsVisible="{Binding IsDownloading}">
-<StackPanel>                                    <TextBlock Text="{Binding StatusText}" FontSize="12" Margin="0,0,0,6" />
-                                    <ProgressBar Value="{Binding Progress}" />
-                                    <TextBlock Text="{Binding Progress, StringFormat='{}{0:F1}%'}"
-                                               HorizontalAlignment="Right" FontSize="11" Foreground="#a6adc8" Margin="0,4,0,0" />
-</StackPanel>                                </Border>
+                                <Border Background="#f2f7ff" CornerRadius="3" Padding="12" IsVisible="{Binding IsDownloading}"
+                                        BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="1">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding StatusText}" FontSize="12" Margin="0,0,0,6" />
+                                        <ProgressBar Value="{Binding Progress}" />
+                                        <TextBlock Text="{Binding Progress, StringFormat='{}{0:F1}%'}"
+                                                   HorizontalAlignment="Right" FontSize="11" Classes="hint" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </Border>
 
-                                <!-- 已安装列表 -->
                                 <StackPanel Orientation="Horizontal" Margin="0,12,0,8">
-                                    <TextBlock Text="已安装：" FontSize="12" Foreground="#a6adc8" VerticalAlignment="Center" />
+                                    <TextBlock Text="已安装：" FontSize="12" Classes="label" VerticalAlignment="Center" />
                                     <ItemsControl ItemsSource="{Binding InstalledVersions}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -494,18 +529,19 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Background="#a6e3a1" CornerRadius="12" Padding="8,3" Margin="3">
-                                                    <TextBlock Text="{Binding}" FontSize="11" Foreground="#1e1e2e" FontWeight="SemiBold" />
+                                                <Border Background="{StaticResource BrushBlueBg}" CornerRadius="12" Padding="8,3" Margin="3">
+                                                    <TextBlock Text="{Binding}" FontSize="11" Foreground="{StaticResource BrushDeep}" FontWeight="SemiBold" />
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
-</StackPanel>                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <!-- 版本列表 -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="📚 可用版本列表" />
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="可用版本列表" />
                                 <ListBox ItemsSource="{Binding Versions}"
                                          SelectedItem="{Binding SelectedVersion}"
                                          Height="400">
@@ -520,18 +556,18 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding Id}" FontWeight="SemiBold" FontSize="13" />
-                                                    <TextBlock Text="{Binding ReleaseTime, StringFormat='{}{0:yyyy-MM-dd}'}" FontSize="10" Foreground="#6c7086" />
+                                                    <TextBlock Text="{Binding ReleaseTime, StringFormat='{}{0:yyyy-MM-dd}'}" FontSize="10" Classes="hint" />
                                                 </StackPanel>
                                                 <Border Grid.Column="1" CornerRadius="10" Padding="8,2" Margin="4,0"
                                                         Background="{Binding Type, Converter={StaticResource TypeColorConv}}">
-                                                    <TextBlock Text="{Binding Type}" FontSize="10" Foreground="#1e1e2e" FontWeight="SemiBold" />
+                                                    <TextBlock Text="{Binding Type}" FontSize="10" Foreground="{StaticResource BrushDeep}" FontWeight="SemiBold" />
                                                 </Border>
                                                 <Border Grid.Column="2" CornerRadius="10" Padding="8,2" Margin="4,0"
                                                         Background="{Binding IsInstalled, Converter={StaticResource InstalledConv}}">
                                                     <TextBlock Text="{Binding IsInstalled, Converter={StaticResource InstalledTextConv}}"
-                                                               FontSize="10" Foreground="#1e1e2e" FontWeight="SemiBold" />
+                                                               FontSize="10" Foreground="{StaticResource BrushDeep}" FontWeight="SemiBold" />
                                                 </Border>
-                                                <Button Grid.Column="3" Content="⬇"
+                                                <Button Grid.Column="3" Content="下载"
                                                         Command="{Binding $parent[ListBox].DataContext.DownloadSelectedCommand}"
                                                         IsVisible="{Binding !IsInstalled}"
                                                         Padding="12,4" FontSize="11" />
@@ -539,252 +575,273 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-</StackPanel>                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <!-- 其他下载（占位） -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="📦 更多资源下载" />
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="更多资源下载" />
                                 <WrapPanel>
-                                    <Button Content="🔌 Forge 下载" Tag="Forge自动安装" Click="NotImplementedClick" />
-                                    <Button Content="🧪 Fabric 下载" Tag="Fabric自动安装" Click="NotImplementedClick" />
-                                    <Button Content="💥 Quilt 下载" Tag="Quilt自动安装" Click="NotImplementedClick" />
-                                    <Button Content="📜 OptiFine 下载" Tag="OptiFine安装" Click="NotImplementedClick" />
-                                    <Button Content="☕ Java 下载" Tag="Java运行时安装" Click="NotImplementedClick" />
-                                    <Button Content="🔧 LiteLoader" Tag="LiteLoader安装" Click="NotImplementedClick" />
-                                    <Button Content="🪟 CurseForge整合包" Tag="CurseForge整合包下载安装" Click="NotImplementedClick" />
-                                    <Button Content="📁 Modrinth整合包" Tag="Modrinth整合包下载安装" Click="NotImplementedClick" />
+                                    <Button Content="Forge" Tag="Forge自动安装" Click="NotImplementedClick" />
+                                    <Button Content="Fabric" Tag="Fabric自动安装" Click="NotImplementedClick" />
+                                    <Button Content="Quilt" Tag="Quilt自动安装" Click="NotImplementedClick" />
+                                    <Button Content="OptiFine" Tag="OptiFine安装" Click="NotImplementedClick" />
+                                    <Button Content="Java" Tag="Java运行时安装" Click="NotImplementedClick" />
+                                    <Button Content="LiteLoader" Tag="LiteLoader安装" Click="NotImplementedClick" />
+                                    <Button Content="CurseForge整合包" Tag="CurseForge整合包下载安装" Click="NotImplementedClick" />
+                                    <Button Content="Modrinth整合包" Tag="Modrinth整合包下载安装" Click="NotImplementedClick" />
                                 </WrapPanel>
-</StackPanel>                            </Border>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-                <!-- 设置 Tab -->
-                <TabItem Header="⚙ 设置">
-                    <ScrollViewer x:Name="SettingsPanel">
-                        <StackPanel Margin="4" x:DataType="vm:LaunchViewModel">
-                            <!-- 版本设置选择（对应 PCL2 的版本设置/全局设置） -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="🎯 版本设置" />
-                                <TextBlock FontSize="11" Foreground="#a6adc8" Margin="0,0,0,8" TextWrapping="Wrap"
+            <!-- 设置 -->
+            <TabItem Header="">
+                <ScrollViewer x:Name="SettingsPanel">
+                    <StackPanel x:DataType="vm:LaunchViewModel">
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="版本设置" />
+                                <TextBlock Classes="hint" Margin="0,0,0,8" TextWrapping="Wrap"
                                            Text="选择要编辑设置的版本。选中具体版本后，下方设置仅对该版本生效；选择「(全局默认)」则作为所有未单独配置版本的默认设置（对应 PCL2 的全局设置）。" />
                                 <ComboBox ItemsSource="{Binding InstalledVersions}"
                                           SelectedItem="{Binding SelectedVersion}" />
-                                <TextBlock FontSize="10" Foreground="#6c7086" Margin="0,6,0,0"
-                                           Text="提示：切换版本时会自动加载该版本的独立设置。" />
-</StackPanel>                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <!-- 游戏目录（对应 PCL2 的游戏目录设置） -->
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="📁 游戏目录" />
-                                <TextBlock FontSize="11" Foreground="#a6adc8" Margin="0,0,0,8" TextWrapping="Wrap"
-                                           Text="游戏安装及数据保存的位置。Windows 下默认与原版 PCL2 / 官方启动器共享 %AppData%\\.minecraft。" />
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="游戏目录" />
+                                <TextBlock Classes="hint" Margin="0,0,0,8" TextWrapping="Wrap"
+                                           Text="游戏安装及数据保存的位置。Windows 下默认与原版 PCL2 / 官方启动器共享 %AppData%\.minecraft。" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox Grid.Column="0" Text="{Binding GameDirectory}" Watermark="游戏目录路径" />
-                                    <Button Grid.Column="1" Content="📂 浏览..." Tag="浏览选择游戏目录"
+                                    <Button Grid.Column="1" Content="浏览..." Tag="浏览选择游戏目录"
                                             Click="BrowseGameDirectoryClick" Margin="8,0,0,0" />
                                 </Grid>
-</StackPanel>                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="☕ Java 运行时设置" />
-                                <StackPanel>
-                                    <TextBlock Text="Java 路径：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
-                                    <TextBox Text="{Binding Settings.JavaPath}" />
-                                    <TextBlock FontSize="10" Foreground="#6c7086" Margin="0,4,0,10"
-                                               Text="{Binding DetectedJavaPath, StringFormat='自动检测: {}'}" />
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button Content="🔍 自动查找" Tag="Java自动查找" Click="NotImplementedClick" />
-                                        <Button Content="📂 浏览..." Tag="浏览选择Java" Click="NotImplementedClick" />
-                                        <Button Content="⬇ 下载Java" Tag="Java下载安装" Click="NotImplementedClick" />
-                                    </StackPanel>
-                                    <Border Background="#313244" CornerRadius="6" Padding="12" Margin="0,12,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="🖥 当前系统" FontSize="10" Foreground="#a6adc8" />
-                                            <TextBlock Text="{Binding SystemInfo}" FontSize="11" Foreground="#cdd6f4" Margin="0,2,0,0" />
-                                            <TextBlock FontSize="10" Margin="0,6,0,0"
-                                                       Foreground="#a6adc8"
-                                                       Text="{Binding PclInteropNote}" TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </Border>
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="Java 运行时设置" />
+                                <TextBlock Text="Java 路径：" Classes="label" Margin="0,0,0,4" />
+                                <TextBox Text="{Binding Settings.JavaPath}" />
+                                <TextBlock Classes="hint" Margin="0,4,0,10"
+                                           Text="{Binding DetectedJavaPath, StringFormat='自动检测: {}'}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="自动查找" Tag="Java自动查找" Click="NotImplementedClick" />
+                                    <Button Content="浏览..." Tag="浏览选择Java" Click="NotImplementedClick" />
+                                    <Button Content="下载Java" Tag="Java下载安装" Click="NotImplementedClick" />
                                 </StackPanel>
-</StackPanel>                            </Border>
+                                <Border Background="#f2f7ff" CornerRadius="3" Padding="12" Margin="0,12,0,0"
+                                        BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="1">
+                                    <StackPanel>
+                                        <TextBlock Text="当前系统" FontSize="10" Classes="label" />
+                                        <TextBlock Text="{Binding SystemInfo}" FontSize="11" Margin="0,2,0,0" />
+                                        <TextBlock FontSize="10" Margin="0,6,0,0" Classes="hint"
+                                                   Text="{Binding PclInteropNote}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <Border Classes="card">
-<StackPanel>                                <TextBlock Classes="title" Text="💾 内存设置" />
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="内存设置" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                                        <TextBlock Text="最小内存 (MB)：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
+                                        <TextBlock Text="最小内存 (MB)：" Classes="label" Margin="0,0,0,4" />
                                         <TextBox Text="{Binding Settings.MinMemory}" />
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
-                                        <TextBlock Text="最大内存 (MB)：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
+                                        <TextBlock Text="最大内存 (MB)：" Classes="label" Margin="0,0,0,4" />
                                         <TextBox Text="{Binding Settings.MaxMemory}" />
                                     </StackPanel>
                                 </Grid>
-                                <TextBlock FontSize="10" Foreground="#6c7086" Margin="0,8,0,0" TextWrapping="Wrap"
+                                <TextBlock Classes="hint" Margin="0,8,0,0" TextWrapping="Wrap"
                                            Text="推荐：4GB 以上内存可设置最大 4096MB；8GB 以上可设置 8192MB。过小会导致游戏卡顿。" />
-</StackPanel>                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <Border Classes="card">
-                                <StackPanel>
-                                <TextBlock Classes="title" Text="🖼 窗口设置" />
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="窗口设置" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                                        <TextBlock Text="窗口宽度：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
+                                        <TextBlock Text="窗口宽度：" Classes="label" Margin="0,0,0,4" />
                                         <TextBox Text="{Binding Settings.WindowWidth}" />
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
-                                        <TextBlock Text="窗口高度：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
+                                        <TextBlock Text="窗口高度：" Classes="label" Margin="0,0,0,4" />
                                         <TextBox Text="{Binding Settings.WindowHeight}" />
                                     </StackPanel>
                                 </Grid>
                                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                                     <CheckBox Content="全屏启动" Tag="全屏模式" IsEnabled="False" />
-                                    <Button Content="📱 常用分辨率" Tag="分辨率快捷选择" Click="NotImplementedClick" Margin="16,0,0,0" />
+                                    <Button Content="常用分辨率" Tag="分辨率快捷选择" Click="NotImplementedClick" Margin="16,0,0,0" />
                                 </StackPanel>
-                                </StackPanel>
-                            </Border>
+                            </StackPanel>
+                        </Border>
 
-                            <Border Classes="card">
-                                <StackPanel>
-                                <TextBlock Classes="title" Text="🛠 高级参数" />
-                                <StackPanel>
-                                    <TextBlock Text="JVM 参数：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
-                                    <TextBox Text="{Binding Settings.JvmArguments}" AcceptsReturn="True"
-                                             Watermark="例如：-XX:+UseG1GC -Dsun.rmi.dgc.server.gcInterval=2147483646" Height="60" TextWrapping="Wrap" />
-                                    <TextBlock Text="游戏附加参数：" FontSize="12" Foreground="#a6adc8" Margin="0,10,0,4" />
-                                    <TextBox Text="{Binding Settings.GameArguments}"
-                                             Watermark="例如：--width 1280 --height 720" />
-                                </StackPanel>
-                                </StackPanel>
-                            </Border>
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="高级参数" />
+                                <TextBlock Text="JVM 参数：" Classes="label" Margin="0,0,0,4" />
+                                <TextBox Text="{Binding Settings.JvmArguments}" AcceptsReturn="True"
+                                         Watermark="例如：-XX:+UseG1GC -Dsun.rmi.dgc.server.gcInterval=2147483646" Height="60" TextWrapping="Wrap" />
+                                <TextBlock Text="游戏附加参数：" Classes="label" Margin="0,10,0,4" />
+                                <TextBox Text="{Binding Settings.GameArguments}"
+                                         Watermark="例如：--width 1280 --height 720" />
+                            </StackPanel>
+                        </Border>
 
-                            <Border Classes="card">
-                                <StackPanel>
-                                <TextBlock Classes="title" Text="🌐 服务器" />
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="服务器" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="100" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                                        <TextBlock Text="服务器 IP：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
+                                        <TextBlock Text="服务器 IP：" Classes="label" Margin="0,0,0,4" />
                                         <TextBox Text="{Binding Settings.ServerIp}" Watermark="启动游戏后自动连接服务器（可选）" />
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
-                                        <TextBlock Text="端口：" FontSize="12" Foreground="#a6adc8" Margin="0,0,0,4" />
+                                        <TextBlock Text="端口：" Classes="label" Margin="0,0,0,4" />
                                         <TextBox Text="{Binding Settings.ServerPort}" />
                                     </StackPanel>
                                 </Grid>
-                                </StackPanel>
-                            </Border>
-
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                <Button Content="恢复默认" Tag="恢复默认设置" Click="NotImplementedClick" />
-                                <Button Classes="primary" Content="💾 保存设置" Command="{Binding SaveSettingsCommand}" />
                             </StackPanel>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
+                        </Border>
 
-                <!-- 更多 Tab（占位） -->
-                <TabItem Header="🎒 Mods">
-                    <ScrollViewer>
-                        <StackPanel Margin="20">
-                            <TextBlock FontSize="22" FontWeight="Bold" Foreground="#89b4fa" Text="🎒 Mod 管理（开发中）" />
-                            <TextBlock TextWrapping="Wrap" Margin="0,10,0,20" Text="Mod 管理功能正在开发中，敬请期待！" />
-                            <WrapPanel>
-                                <Button Content="➕ 添加 Mod" Tag="添加Mod" Click="NotImplementedClick" />
-                                <Button Content="🗑 删除 Mod" Tag="删除Mod" Click="NotImplementedClick" />
-                                <Button Content="🔄 启用/禁用" Tag="Mod启用禁用" Click="NotImplementedClick" />
-                                <Button Content="📥 下载 Mod" Tag="从CurseForge/Modrinth下载Mod" Click="NotImplementedClick" />
-                                <Button Content="⬆ 导出Mod列表" Tag="Mod列表导出" Click="NotImplementedClick" />
-                                <Button Content="📋 冲突检测" Tag="Mod冲突检测" Click="NotImplementedClick" />
-                            </WrapPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="恢复默认" Tag="恢复默认设置" Click="NotImplementedClick" />
+                            <Button Classes="primary" Content="保存设置" Command="{Binding SaveSettingsCommand}" />
                         </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-                <TabItem Header="🗺 服务器">
-                    <ScrollViewer>
-                        <StackPanel Margin="20">
-                            <TextBlock FontSize="22" FontWeight="Bold" Foreground="#89b4fa" Text="🌐 服务器列表（开发中）" />
-                            <TextBlock TextWrapping="Wrap" Margin="0,10,0,20" Text="服务器管理功能正在开发中，敬请期待！" />
-                            <WrapPanel>
-                                <Button Content="➕ 添加服务器" Tag="添加服务器地址" Click="NotImplementedClick" />
-                                <Button Content="🔍 服务器搜索" Tag="服务器搜索" Click="NotImplementedClick" />
-                                <Button Content="📡 Ping 延迟测试" Tag="服务器延迟检测" Click="NotImplementedClick" />
-                                <Button Content="⭐ 收藏服务器" Tag="收藏夹管理" Click="NotImplementedClick" />
-                                <Button Content="📥 服务器列表导入" Tag="批量导入服务器" Click="NotImplementedClick" />
-                            </WrapPanel>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
+            <!-- Mods -->
+            <TabItem Header="">
+                <ScrollViewer>
+                    <StackPanel Margin="0">
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="Mod 管理" />
+                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,16" Text="Mod 管理功能正在开发中，敬请期待！" />
+                                <WrapPanel>
+                                    <Button Content="添加 Mod" Tag="添加Mod" Click="NotImplementedClick" />
+                                    <Button Content="删除 Mod" Tag="删除Mod" Click="NotImplementedClick" />
+                                    <Button Content="启用/禁用" Tag="Mod启用禁用" Click="NotImplementedClick" />
+                                    <Button Content="下载 Mod" Tag="从CurseForge/Modrinth下载Mod" Click="NotImplementedClick" />
+                                    <Button Content="导出Mod列表" Tag="Mod列表导出" Click="NotImplementedClick" />
+                                    <Button Content="冲突检测" Tag="Mod冲突检测" Click="NotImplementedClick" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-                <TabItem Header="📦 整合包">
-                    <ScrollViewer>
-                        <StackPanel Margin="20">
-                            <TextBlock FontSize="22" FontWeight="Bold" Foreground="#89b4fa" Text="📦 整合包管理（开发中）" />
-                            <TextBlock TextWrapping="Wrap" Margin="0,10,0,20" Text="整合包管理功能正在开发中，敬请期待！" />
-                            <WrapPanel>
-                                <Button Content="📥 导入 CurseForge" Tag="CurseForge整合包导入" Click="NotImplementedClick" />
-                                <Button Content="📥 导入 Modrinth" Tag="Modrinth整合包导入" Click="NotImplementedClick" />
-                                <Button Content="📥 导入 HMCL" Tag="HMCL整合包导入" Click="NotImplementedClick" />
-                                <Button Content="📥 导入 PCL" Tag="PCL整合包导入" Click="NotImplementedClick" />
-                                <Button Content="🆕 新建整合包" Tag="创建整合包" Click="NotImplementedClick" />
-                                <Button Content="⬆ 导出整合包" Tag="打包导出" Click="NotImplementedClick" />
-                            </WrapPanel>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
+            <!-- 服务器 / 联机 -->
+            <TabItem Header="">
+                <ScrollViewer>
+                    <StackPanel Margin="0">
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="服务器列表" />
+                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,16" Text="服务器管理功能正在开发中，敬请期待！" />
+                                <WrapPanel>
+                                    <Button Content="添加服务器" Tag="添加服务器地址" Click="NotImplementedClick" />
+                                    <Button Content="服务器搜索" Tag="服务器搜索" Click="NotImplementedClick" />
+                                    <Button Content="Ping 延迟测试" Tag="服务器延迟检测" Click="NotImplementedClick" />
+                                    <Button Content="收藏服务器" Tag="收藏夹管理" Click="NotImplementedClick" />
+                                    <Button Content="服务器列表导入" Tag="批量导入服务器" Click="NotImplementedClick" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-                <TabItem Header="🆘 帮助">
-                    <ScrollViewer>
-                        <StackPanel Margin="20">
-                            <TextBlock FontSize="22" FontWeight="Bold" Foreground="#89b4fa" Text="📚 帮助与支持（开发中）" />
-                            <TextBlock TextWrapping="Wrap" Margin="0,10,0,20" Text="帮助中心正在开发中，敬请期待！" />
-                            <WrapPanel>
-                                <Button Content="📖 使用教程" Tag="使用教程文档" Click="NotImplementedClick" />
-                                <Button Content="❓ 常见问题" Tag="FAQ常见问题" Click="NotImplementedClick" />
-                                <Button Content="💬 反馈建议" Tag="问题反馈" Click="NotImplementedClick" />
-                                <Button Content="🐞 检查更新" Tag="自动更新检查" Click="NotImplementedClick" />
-                                <Button Content="📝 关于" Tag="关于对话框" Click="NotImplementedClick" />
-                                <Button Content="🆘 联系作者" Tag="联系作者" Click="NotImplementedClick" />
-                            </WrapPanel>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
-            </TabControl>
-        </Grid>
+            <!-- 整合包 -->
+            <TabItem Header="">
+                <ScrollViewer>
+                    <StackPanel Margin="0">
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="整合包管理" />
+                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,16" Text="整合包管理功能正在开发中，敬请期待！" />
+                                <WrapPanel>
+                                    <Button Content="导入 CurseForge" Tag="CurseForge整合包导入" Click="NotImplementedClick" />
+                                    <Button Content="导入 Modrinth" Tag="Modrinth整合包导入" Click="NotImplementedClick" />
+                                    <Button Content="导入 HMCL" Tag="HMCL整合包导入" Click="NotImplementedClick" />
+                                    <Button Content="导入 PCL" Tag="PCL整合包导入" Click="NotImplementedClick" />
+                                    <Button Content="新建整合包" Tag="创建整合包" Click="NotImplementedClick" />
+                                    <Button Content="导出整合包" Tag="打包导出" Click="NotImplementedClick" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- 帮助 -->
+            <TabItem Header="">
+                <ScrollViewer>
+                    <StackPanel Margin="0">
+                        <Border Classes="card">
+                            <StackPanel>
+                                <TextBlock Classes="title" Text="帮助与支持" />
+                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,16" Text="帮助中心正在开发中，敬请期待！" />
+                                <WrapPanel>
+                                    <Button Content="使用教程" Tag="使用教程文档" Click="NotImplementedClick" />
+                                    <Button Content="常见问题" Tag="FAQ常见问题" Click="NotImplementedClick" />
+                                    <Button Content="反馈建议" Tag="问题反馈" Click="NotImplementedClick" />
+                                    <Button Content="检查更新" Tag="自动更新检查" Click="NotImplementedClick" />
+                                    <Button Content="关于" Tag="关于对话框" Click="NotImplementedClick" />
+                                    <Button Content="联系作者" Tag="联系作者" Click="NotImplementedClick" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
 
         <!-- 底部状态栏 -->
-        <Grid Grid.Row="2" Background="#181825" Height="32">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="{Binding StatusText}" Margin="16,0,0,0"
-                       VerticalAlignment="Center" FontSize="11" Foreground="#a6adc8" />
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,16,0">
-                <TextBlock Text="🌐" VerticalAlignment="Center" FontSize="14" Foreground="#a6adc8" Margin="0,0,4,0" />
-                <TextBlock Text="BMCLAPI" VerticalAlignment="Center" FontSize="11" Foreground="#a6adc8" Margin="0,0,20,0" />
-                <TextBlock Text="🖥" VerticalAlignment="Center" FontSize="14" Foreground="#a6adc8" Margin="0,0,4,0" />
-                <TextBlock Text="全平台" VerticalAlignment="Center" FontSize="11" Foreground="#a6adc8" Margin="0,0,20,0" />
-                <TextBlock Text="v1.0.0 Alpha" VerticalAlignment="Center" FontSize="11" Foreground="#6c7086" />
-            </StackPanel>
-        </Grid>
+        <Border Grid.Row="2" Background="{StaticResource BrushWhite}" Height="30"
+                BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="0,1,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding StatusText}" Margin="16,0,0,0"
+                           VerticalAlignment="Center" FontSize="11" Classes="label" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,16,0">
+                    <TextBlock Text="BMCLAPI" VerticalAlignment="Center" FontSize="11" Classes="label" Margin="0,0,20,0" />
+                    <TextBlock Text="全平台" VerticalAlignment="Center" FontSize="11" Classes="label" Margin="0,0,20,0" />
+                    <TextBlock Text="v1.0.0 Alpha" VerticalAlignment="Center" FontSize="11" Classes="hint" />
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

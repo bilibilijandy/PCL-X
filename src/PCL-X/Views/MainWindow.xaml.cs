@@ -80,6 +80,17 @@ public partial class MainWindow : Window
         }
     }
 
+    // 顶部导航（PCL2 风格：启动/下载/联机/设置/更多）切换对应 Tab
+    private void TitleNavClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is Control c && c.Tag is string s && int.TryParse(s, out var index))
+        {
+            var tabs = this.FindControl<TabControl>("MainTabs");
+            if (tabs != null && index >= 0 && index < tabs.Items.Count)
+                tabs.SelectedIndex = index;
+        }
+    }
+
     private async void NotImplementedClick(object sender, RoutedEventArgs e)
     {
         if (sender is Control c && c.Tag is string name)
