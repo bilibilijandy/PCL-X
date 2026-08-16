@@ -9,7 +9,10 @@
         x:DataType="vm:MainViewModel"
         Title="PCL-X -  Minecraft 启动器"
         Width="1000" Height="680"
-        MinWidth="860" MinHeight="560">
+        MinWidth="860" MinHeight="560"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        SystemDecorations="None">
 
     <!-- 与 PCL2 一致的蓝白配色表 -->
     <Window.Resources>
@@ -87,6 +90,41 @@
         </Style>
         <Style Selector="Button.nav:pressed">
             <Setter Property="Background" Value="#55ffffff" />
+        </Style>
+
+        <!-- 顶部导航胶囊按钮（对应 PCL2 MyRadioButton：圆角13.5 半透明底） -->
+        <Style Selector="Button.navpill">
+            <Setter Property="Background" Value="#01eaf2fe" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="13.5" />
+            <Setter Property="Padding" Value="16,5" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.navpill:pointerover">
+            <Setter Property="Background" Value="#33ffffff" />
+        </Style>
+        <Style Selector="Button.navpill:pressed">
+            <Setter Property="Background" Value="#55ffffff" />
+        </Style>
+
+        <!-- 标题栏最小化/关闭按钮（白图标，对应 PCL2 MyIconButton Theme=White） -->
+        <Style Selector="Button.titlebtn">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style Selector="Button.titlebtn:pointerover">
+            <Setter Property="Background" Value="#33ffffff" />
+        </Style>
+        <Style Selector="Button.titlebtn.close:pointerover">
+            <Setter Property="Background" Value="#ce2111" />
         </Style>
 
         <!-- 主按钮：蓝色 -->
@@ -219,8 +257,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- 顶部标题栏：蓝色渐变 + Logo + 横向导航 + 用户信息（参照 PCL2 PanTitle） -->
-        <Border Grid.Row="0" Height="58" Background="{StaticResource BrushTitle}" BoxShadow="0 2 8 0 #33000000">
+        <!-- 顶部标题栏：蓝色渐变 + Logo + 横向导航 + 最小化/关闭（参照 PCL2 PanTitle） -->
+        <Border Grid.Row="0" Height="58" Background="{StaticResource BrushTitle}"
+                PointerPressed="TitleBarPointerPressed" BoxShadow="0 2 8 0 #33000000">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -240,17 +279,17 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- 横向导航（PCL2：启动/下载/联机/设置/更多） -->
+                <!-- 横向导航（PCL2：启动/下载/联机/设置/更多，胶囊按钮） -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button Classes="nav" Content="启动" Tag="0" Click="TitleNavClick" />
-                    <Button Classes="nav" Content="下载" Tag="2" Click="TitleNavClick" />
-                    <Button Classes="nav" Content="联机" Tag="5" Click="TitleNavClick" />
-                    <Button Classes="nav" Content="设置" Tag="3" Click="TitleNavClick" />
-                    <Button Classes="nav" Content="更多" Tag="6" Click="TitleNavClick" />
+                    <Button Classes="navpill" Content="启动" Tag="0" Click="TitleNavClick" />
+                    <Button Classes="navpill" Content="下载" Tag="2" Click="TitleNavClick" />
+                    <Button Classes="navpill" Content="联机" Tag="5" Click="TitleNavClick" />
+                    <Button Classes="navpill" Content="设置" Tag="3" Click="TitleNavClick" />
+                    <Button Classes="navpill" Content="更多" Tag="6" Click="TitleNavClick" />
                 </StackPanel>
 
-                <!-- 用户信息 / 设置 -->
-                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,16,0" VerticalAlignment="Center">
+                <!-- 用户信息 / 设置 / 最小化 / 关闭（对应 PCL2 BtnTitleMin / BtnTitleClose） -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Ellipse Width="30" Height="30" Fill="#ccffffff" Margin="0,0,9,0">
                             <Ellipse.Clip>
@@ -264,7 +303,9 @@
                                        FontSize="10" Foreground="#ccffffff" />
                         </StackPanel>
                     </StackPanel>
-                    <Button Classes="icon" Content="⚙" Tag="全局设置" Click="NotImplementedClick" Margin="10,0,0,0" />
+                    <Button Classes="icon" Content="⚙" Tag="全局设置" Click="NotImplementedClick" Margin="8,0,0,0" />
+                    <Button Classes="titlebtn" Content="__" Tag="minimize" Click="MinimizeClick" Margin="4,0,0,0" FontSize="13" />
+                    <Button Classes="titlebtn close" Content="✕" Tag="close" Click="CloseClick" Margin="2,0,0,0" />
                 </StackPanel>
             </Grid>
         </Border>
@@ -272,103 +313,124 @@
         <!-- 主体内容：浅蓝背景，页面由顶部导航切换 -->
         <TabControl Grid.Row="1" x:Name="MainTabs" Background="Transparent" Margin="16,14,16,10">
 
-            <!-- 启动 / 首页 -->
+            <!-- 启动（对应 PCL2 PageLaunch：左侧输入面板 + 右侧日志卡片） -->
             <TabItem Header="">
-                <ScrollViewer>
-                    <StackPanel Margin="0">
-                        <Border Classes="card">
-                            <StackPanel>
-                                <TextBlock Classes="title" Text="启动游戏" />
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Classes="label" Text="选择版本：" Margin="0,0,0,4" />
-                                        <ComboBox ItemsSource="{Binding InstalledVersions}"
-                                                  SelectedItem="{Binding SelectedVersion}"
-                                                  PlaceholderText="未选择版本" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
-                                        <Button Classes="success" Content="启动游戏"
-                                                Command="{Binding LaunchGameCommand}"
-                                                IsEnabled="{Binding !IsLaunching}"
-                                                Padding="22,9" />
-                                        <Button Content="高级设置" Tag="高级启动设置" Click="NotImplementedClick" />
-                                    </StackPanel>
-                                </Grid>
+                <Grid ColumnDefinitions="300,1*">
+                    <!-- 左侧面板：版本选择 + 账号 + 启动按钮（对应 PCL2 PageLaunchLeft） -->
+                    <Grid Grid.Column="0" Background="#F1FFFFFF">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 版本选择按钮 -->
+                        <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="35" Margin="20,20,20,0"
+                                Content="{Binding SelectedVersion, FallbackValue='版本选择'}"
+                                Tag="版本选择" Click="NotImplementedClick" />
+
+                        <!-- 账号 / 登录区（对应 PCL2 PanLogin） -->
+                        <StackPanel Grid.Row="1" Margin="20,24,20,0" VerticalAlignment="Top">
+                            <Border CornerRadius="13" MinHeight="27" MaxHeight="27" Background="#01eaf2fe"
+                                    HorizontalAlignment="Center" Padding="12,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="👤　" FontSize="13" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding CurrentUser.UserName, FallbackValue='离线'}"
+                                               FontSize="14" Foreground="{StaticResource BrushBlue}"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Text="　(离线)" FontSize="14" Foreground="{StaticResource BrushBlue}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,14,0,0">
+                                <Button Classes="navpill" Content="正版" Tag="正版登录" Click="NotImplementedClick" Margin="4,0" FontSize="13" />
+                                <Button Classes="navpill" Content="离线" Tag="离线登录" Click="NotImplementedClick" Margin="4,0" FontSize="13" />
+                            </StackPanel>
+                            <Border Background="{StaticResource BrushWhite}" CornerRadius="3" Padding="14" Margin="0,16,0,0"
+                                    BorderBrush="{StaticResource BrushBlueBg}" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="离线账户" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource BrushDeep}" Margin="0,0,0,8" />
+                                    <TextBox Watermark="输入用户名登录离线模式" />
+                                    <Button Classes="primary" Content="登录" Command="{Binding OpenLoginWindowCommand}"
+                                            Margin="0,10,0,0" HorizontalAlignment="Stretch" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- 启动按钮（对应 PCL2 BtnLaunch） -->
+                        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,0,20,20">
+                            <Button Classes="success" Height="54" FontSize="20" FontWeight="Bold"
+                                    Content="启动游戏" Command="{Binding LaunchGameCommand}"
+                                    IsEnabled="{Binding !IsLaunching}" />
+                            <TextBlock Text="{Binding SelectedVersion, FallbackValue='正在加载版本列表，请稍候'}"
+                                       Margin="35,0" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                                       FontSize="11" Foreground="{StaticResource BrushGrayLight}"
+                                       IsHitTestVisible="False" TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                    </Grid>
+
+                    <!-- 右侧面板：启动日志等卡片（对应 PCL2 PageLaunchRight） -->
+                    <ScrollViewer Grid.Column="1">
+                        <StackPanel Margin="25,25,25,10">
+                            <!-- 下载进度（显示时） -->
+                            <Border Classes="card" IsVisible="{Binding IsDownloading}">
+                                <StackPanel>
+                                    <TextBlock Classes="title" Text="下载进度" />
+                                    <TextBlock Text="{Binding StatusText}" Margin="0,0,0,8" />
+                                    <ProgressBar Value="{Binding DownloadProgress}" IsIndeterminate="False" />
+                                    <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:F1}%'}"
+                                               HorizontalAlignment="Right" FontSize="11" Foreground="{StaticResource BrushGrayLight}" Margin="0,4,0,0" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 启动日志（对应 PCL2 PanLog） -->
+                            <Border Classes="card">
+                                <StackPanel>
+                                    <TextBlock Classes="title" Text="启动日志" />
+                                    <TextBlock Text="{Binding StatusText, FallbackValue='尚未启动游戏。'}"
+                                               Margin="0,0,0,0" TextWrapping="Wrap" FontSize="13.5" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 状态信息 -->
+                            <Border Classes="card">
+                                <StackPanel>
+                                    <TextBlock Classes="title" Text="状态信息" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="当前用户：" Classes="label" />
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentUser.UserName, FallbackValue='未登录'}" />
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="选中版本：" Classes="label" />
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedVersion, FallbackValue='未选择'}" />
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="已安装版本：" Classes="label" />
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding InstalledVersions.Count, StringFormat='{}共 {0} 个'}" />
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="可用版本：" Classes="label" />
+                                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AvailableVersions.Count, StringFormat='{}共 {0} 个'}" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 提示 -->
+                            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                                 <TextBlock Classes="hint" Text="提示：若版本列表为空，请前往「下载」页面下载版本。"
-                                           Margin="0,10,0,0" TextWrapping="Wrap" />
+                                           TextWrapping="Wrap" />
                             </StackPanel>
-                        </Border>
-
-                        <!-- 下载进度（显示时） -->
-                        <Border Classes="card" IsVisible="{Binding IsDownloading}">
-                            <StackPanel>
-                                <TextBlock Classes="title" Text="下载进度" />
-                                <TextBlock Text="{Binding StatusText}" Margin="0,0,0,8" />
-                                <ProgressBar Value="{Binding DownloadProgress}" IsIndeterminate="False" />
-                                <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0:F1}%'}"
-                                           HorizontalAlignment="Right" FontSize="11" Foreground="{StaticResource BrushGrayLight}" Margin="0,4,0,0" />
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 状态信息 -->
-                        <Border Classes="card">
-                            <StackPanel>
-                                <TextBlock Classes="title" Text="状态信息" />
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="当前用户：" Classes="label" />
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentUser.UserName, FallbackValue='未登录'}" />
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="选中版本：" Classes="label" />
-                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedVersion, FallbackValue='未选择'}" />
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="已安装版本：" Classes="label" />
-                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding InstalledVersions.Count, StringFormat='{}共 {0} 个'}" />
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="可用版本：" Classes="label" />
-                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AvailableVersions.Count, StringFormat='{}共 {0} 个'}" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 关于 -->
-                        <Border Classes="card">
-                            <StackPanel>
-                                <TextBlock Classes="title" Text="关于 PCL-X" />
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="版本：" Classes="label" />
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="1.0.0 (Alpha)" />
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="框架：" Classes="label" />
-                                    <TextBlock Grid.Row="1" Grid.Column="1" Text=".NET 8.0 + Avalonia UI" />
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="平台：" Classes="label" />
-                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="Windows / macOS / Linux (全平台)" />
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="开源地址：" Classes="label" />
-                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="github.com/bilibilijandy/PCL-X" Foreground="{StaticResource BrushBlue}" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
             </TabItem>
 
             <!-- 账户 -->

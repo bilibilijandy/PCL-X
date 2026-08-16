@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
@@ -79,6 +80,17 @@ public partial class MainWindow : Window
             _vm.SelectedVersion = versionId;
         }
     }
+
+    // 标题栏拖动窗口（对应 PCL2 WindowStyle=None 的自定义标题栏）
+    private void TitleBarPointerPressed(object sender, PointerPressedEventArgs e)
+    {
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            BeginMoveDrag(e);
+    }
+
+    // 最小化 / 关闭（对应 PCL2 BtnTitleMin / BtnTitleClose）
+    private void MinimizeClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+    private void CloseClick(object sender, RoutedEventArgs e) => Close();
 
     // 顶部导航（PCL2 风格：启动/下载/联机/设置/更多）切换对应 Tab
     private void TitleNavClick(object sender, RoutedEventArgs e)
