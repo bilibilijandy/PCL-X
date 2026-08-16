@@ -67,7 +67,7 @@ jobs:
       - name: Package artifact (version + platform)
         shell: pwsh
         run: |
-          $ver = "v1.${{ github.run_number }}.0"
+          $ver = "v0.${{ github.run_number }}.0-beta"
           $rid = "${{ matrix.rid }}"
           $ext = "${{ matrix.ext }}"
           $out = Join-Path "${{ runner.temp }}" "out/$rid"
@@ -141,7 +141,7 @@ jobs:
 
       - name: Determine version
         id: ver
-        run: echo "version=v1.${{ github.run_number }}.0" >> "$GITHUB_OUTPUT"
+        run: echo "version=v0.${{ github.run_number }}.0-beta" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
         run: |
