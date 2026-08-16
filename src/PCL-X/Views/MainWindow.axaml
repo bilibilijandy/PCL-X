@@ -25,7 +25,12 @@
         <Color x:Key="ClrGray">#737373</Color>
         <Color x:Key="ClrGrayLight">#a6a6a6</Color>
         <Color x:Key="ClrWhite">#ffffff</Color>
+        <Color x:Key="ClrBackground">#fbfbfb</Color>
         <SolidColorBrush x:Key="BrushBgl" Color="{StaticResource ClrBgl}" />
+        <SolidColorBrush x:Key="BrushBackground" Color="{StaticResource ClrBackground}" />
+        <SolidColorBrush x:Key="BrushGray4" Color="#a6a6a6" />
+        <SolidColorBrush x:Key="BrushGray6" Color="#ebebeb" />
+        <SolidColorBrush x:Key="BrushGray7" Color="#f0f0f0" />
         <SolidColorBrush x:Key="BrushBlue" Color="{StaticResource ClrBlue}" />
         <SolidColorBrush x:Key="BrushBlueBg" Color="{StaticResource ClrBlueBg}" />
         <SolidColorBrush x:Key="BrushBlueHover" Color="{StaticResource ClrBlueHover}" />
@@ -48,32 +53,33 @@
 
     <Window.Styles>
         <Style Selector="Window">
-            <Setter Property="Background" Value="{StaticResource BrushBgl}" />
+            <Setter Property="Background" Value="{StaticResource BrushBackground}" />
             <Setter Property="Foreground" Value="{StaticResource BrushDeep}" />
             <Setter Property="FontFamily" Value="Microsoft YaHei UI, PingFang SC, Segoe UI, sans-serif" />
         </Style>
 
-        <!-- 按钮：PCL2 白色圆角按钮 -->
+        <!-- 按钮（对应 PCL2 MyButton：深色描边 + 白底 + 圆角3 + 字号13） -->
         <Style Selector="Button">
             <Setter Property="Background" Value="{StaticResource BrushWhite}" />
             <Setter Property="Foreground" Value="{StaticResource BrushDeep}" />
-            <Setter Property="BorderBrush" Value="{StaticResource BrushBlueBg}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BrushDeep}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="3" />
             <Setter Property="Padding" Value="14,7" />
             <Setter Property="Margin" Value="2" />
+            <Setter Property="FontSize" Value="13" />
         </Style>
         <Style Selector="Button:pointerover">
-            <Setter Property="Background" Value="#eef4ff" />
-            <Setter Property="BorderBrush" Value="{StaticResource BrushBlueHover}" />
+            <Setter Property="Background" Value="{StaticResource BrushBgl}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BrushDeep}" />
         </Style>
         <Style Selector="Button:pressed">
             <Setter Property="Background" Value="{StaticResource BrushBlueLight}" />
         </Style>
         <Style Selector="Button:disabled">
-            <Setter Property="Background" Value="#f0f0f0" />
-            <Setter Property="Foreground" Value="{StaticResource BrushGrayLight}" />
-            <Setter Property="BorderBrush" Value="#ebebeb" />
+            <Setter Property="Background" Value="{StaticResource BrushGray7}" />
+            <Setter Property="Foreground" Value="{StaticResource BrushGray4}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BrushGray6}" />
         </Style>
 
         <!-- 顶部导航按钮：透明底 + 白色文字 -->
@@ -92,13 +98,16 @@
             <Setter Property="Background" Value="#55ffffff" />
         </Style>
 
-        <!-- 顶部导航胶囊按钮（对应 PCL2 MyRadioButton：圆角13.5 半透明底） -->
+        <!-- 顶部导航胶囊按钮（对应 PCL2 MyRadioButton：圆角13.5 半透明底 高27） -->
         <Style Selector="Button.navpill">
             <Setter Property="Background" Value="#01eaf2fe" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="CornerRadius" Value="13.5" />
-            <Setter Property="Padding" Value="16,5" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="MinHeight" Value="27" />
+            <Setter Property="MaxHeight" Value="27" />
+            <Setter Property="Margin" Value="5,0" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -135,8 +144,8 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="CornerRadius" Value="3" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Width" Value="30" />
-            <Setter Property="Height" Value="30" />
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
             <Setter Property="FontSize" Value="16" />
         </Style>
         <Style Selector="Button.titlebtn:pointerover">
@@ -275,8 +284,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- 顶部标题栏：蓝色渐变 + Logo + 横向导航 + 最小化/关闭（参照 PCL2 PanTitle） -->
-        <Border Grid.Row="0" Height="58" Background="{StaticResource BrushTitle}"
+        <!-- 顶部标题栏：实心蓝 + Logo + 横向导航 + 最小化/关闭（参照 PCL2 PanTitle，高48 实心 ColorBrush3） -->
+        <Border Grid.Row="0" Height="48" Background="{StaticResource BrushBlue}"
                 PointerPressed="TitleBarPointerPressed" BoxShadow="0 2 8 0 #33000000">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -285,16 +294,13 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <!-- Logo 区 -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
-                    <Border Width="34" Height="34" CornerRadius="6" Background="White" Margin="0,0,11,0">
-                        <TextBlock Text="PCL" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontSize="13" FontWeight="Bold" Foreground="{StaticResource BrushBlue}" />
+                <!-- Logo 区（对应 PCL2 PanTitleLeft：白底 CE 徽标 + 白色标题） -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="18,0,0,0" VerticalAlignment="Center">
+                    <Border Width="20" Height="18" CornerRadius="5" Background="White" Margin="0,0,8,0">
+                        <TextBlock Text="PX" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="9" FontWeight="Bold" Foreground="{StaticResource BrushBlue}" />
                     </Border>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="PCL-X" FontSize="18" FontWeight="Bold" Foreground="White" />
-                        <TextBlock Text="Plain Craft Launcher" FontSize="10" Foreground="#ccffffff" Margin="0,-2,0,0" />
-                    </StackPanel>
+                    <TextBlock Text="PCL-X" FontSize="17" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <!-- 横向导航（PCL2：启动/下载/联机/设置/更多，胶囊按钮+图标） -->
@@ -331,11 +337,10 @@
                     </Button>
                 </StackPanel>
 
-                <!-- 设置 / 最小化 / 关闭（对应 PCL2 BtnTitleMin / BtnTitleClose，右上角不显示玩家名） -->
-                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center">
-                    <Button Classes="icon" Content="⚙" Tag="全局设置" Click="NotImplementedClick" Margin="8,0,0,0" />
-                    <Button Classes="titlebtn" Content="__" Tag="minimize" Click="MinimizeClick" Margin="4,0,0,0" FontSize="13" />
-                    <Button Classes="titlebtn close" Content="✕" Tag="close" Click="CloseClick" Margin="2,0,0,0" />
+                <!-- 最小化 / 关闭（对应 PCL2 BtnTitleMin / BtnTitleClose，28x28，右缘 44/12） -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Classes="titlebtn" Content="__" Tag="minimize" Click="MinimizeClick" Margin="0,0,4,0" FontSize="13" />
+                    <Button Classes="titlebtn close" Content="✕" Tag="close" Click="CloseClick" Margin="0,0,12,0" />
                 </StackPanel>
             </Grid>
         </Border>
